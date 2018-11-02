@@ -4,8 +4,7 @@ body {
 
 }
 #thewholething{
-	background-color: black;
-	background-image: url('pretendgame.png');
+	background-color: rgb(54,54,54);
 	width: 1093px;
 	height: 631px;
 }
