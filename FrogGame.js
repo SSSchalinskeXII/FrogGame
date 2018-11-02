@@ -1,6 +1,11 @@
 window.onload = function() {
 
-    var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game', { preload: preload, create: create });
+    var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+    var timer;
+    var timerHasRepeatedThisManyTimes = 0;
+
+    var txt_SecondsLeft;
+    var timeleft_seconds;
 
     function preload () {
 
@@ -10,6 +15,12 @@ window.onload = function() {
     }
 
     function create () {
+
+        // Game Timer
+        timer = game.time.create();
+        //timer.duration = 30000;
+        timer.loop(30000,timerFinished, this);
+        timer.start();
 
         // Placeholder Background
         var placeholder = game.add.sprite(game.world.centerX, game.world.centerY, 'img_placeholder');
@@ -22,12 +33,13 @@ window.onload = function() {
         txt_TimeLeft.font ='Source Code Pro';
         txt_TimeLeft.fontSize ='33px';
 
-        var timeleft_seconds = 15;
-        var txt_SecondsLeft = game.add.text(460, 425, timeleft_seconds)
+        timeleft_seconds = 15;
+        txt_SecondsLeft = game.add.text(460, 425, timeleft_seconds)
         txt_SecondsLeft.fill = "#FF0000";
         txt_SecondsLeft.anchor.set(0,0);
         txt_SecondsLeft.font ='Source Code Pro';
         txt_SecondsLeft.fontSize ='33px';
+        
 
 
         // Score Text Elements
@@ -68,7 +80,22 @@ window.onload = function() {
     }
 
     function update() {
+        
+    }
 
+    function timerFinished() {
+        timer.stop();
+    }
+
+    function render() {
+
+        if (timer.running) {
+            timeleft_seconds = timer.duration.toFixed(0) / 1000
+            txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
+        }
+        else {
+            txt_SecondsLeft.text = 0;
+        }
 
     }
 };
