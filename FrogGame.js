@@ -1,10 +1,10 @@
 window.onload = function() {
 
-    var game = new Phaser.Game(1093, 631, Phaser.AUTO, '', { preload: preload, create: create });
+    var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game', { preload: preload, create: create });
 
     function preload () {
 
-        game.load.image('img_placeholder', 'pretendgame.png');
+        game.load.image('img_placeholder', 'justgame.png');
         game.load.audio('snd_jump','frogjump.wav');
 
     }
