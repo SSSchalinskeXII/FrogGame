@@ -9,7 +9,7 @@ window.onload = function() {
 
     function preload () {
 
-        game.load.image('img_placeholder', 'justgame_reduceelements.png');
+        game.load.image('img_placeholder', 'level1mockupplaceholder.png');
         game.load.audio('snd_jump','frogjump.wav');
 
     }
@@ -40,8 +40,6 @@ window.onload = function() {
         txt_SecondsLeft.font ='Source Code Pro';
         txt_SecondsLeft.fontSize ='33px';
         
-
-
         // Score Text Elements
         var txt_ScoreLabel = game.add.text(15, 10, "Score:")
         txt_ScoreLabel.fill = "#FFFFFF";
@@ -69,9 +67,6 @@ window.onload = function() {
         txt_CurrentLivesLeftDisplay.anchor.set(0,0);
         txt_CurrentLivesLeftDisplay.font ='Source Code Pro';
         txt_CurrentLivesLeftDisplay.fontSize ='33px';
-
-
-
 
         // Audio 
         var snd_jump = game.add.audio('snd_jump');
