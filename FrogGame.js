@@ -2,7 +2,6 @@ window.onload = function() {
 
     var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
     var timer;
-    var timerHasRepeatedThisManyTimes = 0;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
@@ -16,13 +15,42 @@ window.onload = function() {
 
     }
 
+    function initializeTimer(timerObject, durationInSeconds) {
+
+        timerObject.loop(durationInSeconds * 1000,stopTimer, this);
+
+    }
+
+    function startTimer(timerObject) {
+
+        timer.start();
+
+    }
+
+    function stopTimer() {
+
+        timer.stop();
+
+    }
+
+    function updateTimerOSD() {
+
+        if (timer.running) {
+            timeleft_seconds = timer.duration.toFixed(0) / 1000;
+            txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
+        }
+        else {
+            txt_SecondsLeft.text = 0;
+        }
+
+    }
+
     function create () {
 
         // Game Timer
         timer = game.time.create();
-        //timer.duration = 30000;
-        timer.loop(30000,timerFinished, this);
-        timer.start();
+        initializeTimer(timer, 5);
+        startTimer(timer);
 
         // Placeholder Background
         var placeholder = game.add.sprite(game.world.centerX, game.world.centerY, 'img_placeholder');
@@ -78,23 +106,16 @@ window.onload = function() {
 
     }
 
-    function update() {
-        
-    }
+    function update() { 
 
-    function timerFinished() {
-        timer.stop();
+
+
     }
 
     function render() {
 
-        if (timer.running) {
-            timeleft_seconds = timer.duration.toFixed(0) / 1000
-            txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
-        }
-        else {
-            txt_SecondsLeft.text = 0;
-        }
+        updateTimerOSD();
 
     }
+
 };
