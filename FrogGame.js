@@ -6,10 +6,12 @@ window.onload = function() {
 
     var txt_SecondsLeft;
     var timeleft_seconds;
+    var player1sprite;
 
     function preload () {
 
         game.load.image('img_placeholder', 'level1mockupplaceholder.png');
+        game.load.image('img_frogsprite', 'frogsprite.png');
         game.load.audio('snd_jump','frogjump.wav');
 
     }
@@ -25,6 +27,8 @@ window.onload = function() {
         // Placeholder Background
         var placeholder = game.add.sprite(game.world.centerX, game.world.centerY, 'img_placeholder');
         placeholder.anchor.setTo(0.5, 0.5);
+
+        player1sprite = game.add.sprite(250,390, 'img_frogsprite');
 
         // Time Left Text Elements
         var txt_TimeLeft = game.add.text(250, 425, "Time Left:")
