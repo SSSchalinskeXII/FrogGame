@@ -2,46 +2,19 @@ window.onload = function() {
 
     var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
     var timer;
+    var sprite;
+    var player;
+    var canMove = true;
+    var jumpDistance = 1500;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
-    var player1sprite;
 
     function preload () {
 
         game.load.image('img_placeholder', 'level1mockupplaceholder.png');
         game.load.image('img_frogsprite', 'frogsprite.png');
         game.load.audio('snd_jump','frogjump.wav');
-
-    }
-
-    function initializeTimer(timerObject, durationInSeconds) {
-
-        timerObject.loop(durationInSeconds * 1000,stopTimer, this);
-
-    }
-
-    function startTimer(timerObject) {
-
-        timer.start();
-
-    }
-
-    function stopTimer() {
-
-        timer.stop();
-
-    }
-
-    function updateTimerOSD() {
-
-        if (timer.running) {
-            timeleft_seconds = timer.duration.toFixed(0) / 1000;
-            txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
-        }
-        else {
-            txt_SecondsLeft.text = 0;
-        }
 
     }
 
@@ -53,10 +26,11 @@ window.onload = function() {
         startTimer(timer);
 
         // Placeholder Background
-        var placeholder = game.add.sprite(game.world.centerX, game.world.centerY, 'img_placeholder');
-        placeholder.anchor.setTo(0.5, 0.5);
+        game.add.sprite(0,0, 'img_placeholder');
 
-        player1sprite = game.add.sprite(250,390, 'img_frogsprite');
+        player = game.add.sprite(350,400, 'img_frogsprite');
+
+        game.physics.arcade.enable(player);
 
         // Time Left Text Elements
         var txt_TimeLeft = game.add.text(250, 425, "Time Left:")
@@ -108,8 +82,37 @@ window.onload = function() {
 
     function update() { 
 
+        cursors = game.input.keyboard.createCursorKeys();
+        player.body.velocity.x = 0;
+        player.body.velocity.y = 0;
 
-
+        if (cursors.up.isDown){
+            //  Move up
+            while(canMove){
+                player.body.velocity.y = -jumpDistance;
+                canMove = false;
+            }
+        } else if (cursors.down.isDown){
+            //  Move down
+            while(canMove){
+                player.body.velocity.y = jumpDistance;
+                canMove = false;
+            }
+        } else if (cursors.right.isDown){
+            //  Move to the right
+            while(canMove){
+                player.body.velocity.x = jumpDistance;
+                canMove = false;
+            }
+        } else if (cursors.left.isDown){
+            //  Move to the left
+            while(canMove){
+                player.body.velocity.x = -jumpDistance;
+                canMove = false;
+            }
+        } else {
+            canMove = true;
+        }
     }
 
     function render() {
@@ -117,5 +120,36 @@ window.onload = function() {
         updateTimerOSD();
 
     }
+
+        function initializeTimer(timerObject, durationInSeconds) {
+
+        timerObject.loop(durationInSeconds * 1000,stopTimer, this);
+
+    }
+
+    function startTimer(timerObject) {
+
+        timer.start();
+
+    }
+
+    function stopTimer() {
+
+        timer.stop();
+
+    }
+
+    function updateTimerOSD() {
+
+        if (timer.running) {
+            timeleft_seconds = timer.duration.toFixed(0) / 1000;
+            txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
+        }
+        else {
+            txt_SecondsLeft.text = 0;
+        }
+
+    }
+
 
 };
