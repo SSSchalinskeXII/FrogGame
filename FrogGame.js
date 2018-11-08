@@ -2,15 +2,46 @@ window.onload = function() {
 
     var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
     var timer;
-    var timerHasRepeatedThisManyTimes = 0;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
+    var player1sprite;
 
     function preload () {
 
-        game.load.image('img_placeholder', 'justgame_reduceelements.png');
+        game.load.image('img_placeholder', 'level1mockupplaceholder.png');
+        game.load.image('img_frogsprite', 'frogsprite.png');
         game.load.audio('snd_jump','frogjump.wav');
+
+    }
+
+    function initializeTimer(timerObject, durationInSeconds) {
+
+        timerObject.loop(durationInSeconds * 1000,stopTimer, this);
+
+    }
+
+    function startTimer(timerObject) {
+
+        timer.start();
+
+    }
+
+    function stopTimer() {
+
+        timer.stop();
+
+    }
+
+    function updateTimerOSD() {
+
+        if (timer.running) {
+            timeleft_seconds = timer.duration.toFixed(0) / 1000;
+            txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
+        }
+        else {
+            txt_SecondsLeft.text = 0;
+        }
 
     }
 
@@ -18,13 +49,14 @@ window.onload = function() {
 
         // Game Timer
         timer = game.time.create();
-        //timer.duration = 30000;
-        timer.loop(30000,timerFinished, this);
-        timer.start();
+        initializeTimer(timer, 5);
+        startTimer(timer);
 
         // Placeholder Background
         var placeholder = game.add.sprite(game.world.centerX, game.world.centerY, 'img_placeholder');
         placeholder.anchor.setTo(0.5, 0.5);
+
+        player1sprite = game.add.sprite(250,390, 'img_frogsprite');
 
         // Time Left Text Elements
         var txt_TimeLeft = game.add.text(250, 425, "Time Left:")
@@ -40,8 +72,6 @@ window.onload = function() {
         txt_SecondsLeft.font ='Source Code Pro';
         txt_SecondsLeft.fontSize ='33px';
         
-
-
         // Score Text Elements
         var txt_ScoreLabel = game.add.text(15, 10, "Score:")
         txt_ScoreLabel.fill = "#FFFFFF";
@@ -70,32 +100,22 @@ window.onload = function() {
         txt_CurrentLivesLeftDisplay.font ='Source Code Pro';
         txt_CurrentLivesLeftDisplay.fontSize ='33px';
 
-
-
-
         // Audio 
         var snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
 
     }
 
-    function update() {
-        
-    }
+    function update() { 
 
-    function timerFinished() {
-        timer.stop();
+
+
     }
 
     function render() {
 
-        if (timer.running) {
-            timeleft_seconds = timer.duration.toFixed(0) / 1000
-            txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
-        }
-        else {
-            txt_SecondsLeft.text = 0;
-        }
+        updateTimerOSD();
 
     }
+
 };
