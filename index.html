@@ -5,6 +5,7 @@
         <title>Frog Game</title>
         <link rel="stylesheet" type="text/css" href="FrogGame.css">
         <script src="build/phaser.min.js"></script>
+        <script type="text/javascript" src="FrogGame.js"></script>
     </head>
     <body>
         <div id="thewholething">
@@ -17,6 +18,11 @@
             <div id="wipsign">
             </div>
         </div>
-        <script type="text/javascript" src="FrogGame.js"></script>
+        <script type="text/javascript">
+
+        var game = new Phaser.Game(719, 461);
+        game.state.add('StateA', MyGame.StateA);
+        game.state.start('StateA');
+
     </body>
 </html>
