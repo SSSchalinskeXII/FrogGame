@@ -1,29 +1,39 @@
-window.onload = function() {
+var MyGame = {};
 
-    var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
-    var timer;
-    var sprite;
-    var player;
-    var canMove = true;
-    var jumpDistance = 1500;
+MyGame.StateA = function(game){
 
-    var txt_SecondsLeft;
-    var timeleft_seconds;
 
-    function preload () {
+
+};
+
+MyGame.StateA.prototype = {
+
+    //var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+
+
+    preload: function () {
 
         game.load.image('img_placeholder', 'level1mockupplaceholder.png');
         game.load.image('img_frogsprite', 'frogsprite.png');
         game.load.audio('snd_jump','frogjump.wav');
 
-    }
+    },
 
-    function create () {
+    create: function () {
+
+        var timer;
+        var sprite;
+        var player;
+        var canMove = true;
+        var jumpDistance = 1500;
+
+        var txt_SecondsLeft;
+        var timeleft_seconds;
 
         // Game Timer
         timer = game.time.create();
-        initializeTimer(timer, 5);
-        startTimer(timer);
+        //initializeTimer(timer, 5);
+        //startTimer(timer);
 
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
@@ -77,11 +87,10 @@ window.onload = function() {
         // Audio 
         var snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
+    },
 
-    }
-
-    function update() { 
-
+    update: function () { 
+/*
         cursors = game.input.keyboard.createCursorKeys();
         player.body.velocity.x = 0;
         player.body.velocity.y = 0;
@@ -113,33 +122,33 @@ window.onload = function() {
         } else {
             canMove = true;
         }
-    }
+*/    },
 
-    function render() {
+    render: function () {
 
-        updateTimerOSD();
+        //updateTimerOSD();
 
-    }
+    },
 
-        function initializeTimer(timerObject, durationInSeconds) {
+    initializeTimer: function (timerObject, durationInSeconds) {/*
 
         timerObject.loop(durationInSeconds * 1000,stopTimer, this);
 
-    }
+    */},
 
-    function startTimer(timerObject) {
+    startTimer: function (timerObject) {/*
 
-        timer.start();
+        timerObject.start();
 
-    }
+    */},
 
-    function stopTimer() {
+    stopTimer: function (timerObject) {/*
 
-        timer.stop();
+        timerObject.stop();
 
-    }
+    */},
 
-    function updateTimerOSD() {
+    updateTimerOSD: function () {/*
 
         if (timer.running) {
             timeleft_seconds = timer.duration.toFixed(0) / 1000;
@@ -149,7 +158,8 @@ window.onload = function() {
             txt_SecondsLeft.text = 0;
         }
 
-    }
+    */}
+
 
 
 };
