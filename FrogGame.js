@@ -1,5 +1,6 @@
 window.onload = function() {
 
+    //Testing Comment
     var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
     var timer;
     var sprite;
