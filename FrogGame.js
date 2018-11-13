@@ -6,6 +6,8 @@ window.onload = function() {
     var player;
     var canMove = true;
     var jumpDistance = 1500;
+    
+    var obstacle;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
@@ -14,6 +16,7 @@ window.onload = function() {
 
         game.load.image('img_placeholder', 'level1mockupplaceholder.png');
         game.load.image('img_frogsprite', 'frogsprite.png');
+        game.load.image('img_nick', 'nick.png');
         game.load.audio('snd_jump','frogjump.wav');
 
     }
@@ -31,6 +34,8 @@ window.onload = function() {
         player = game.add.sprite(350,400, 'img_frogsprite');
 
         game.physics.arcade.enable(player);
+        
+        obstacle = game.add.sprite(1, 350, 'img_nick');
 
         // Time Left Text Elements
         var txt_TimeLeft = game.add.text(250, 425, "Time Left:")
@@ -113,6 +118,9 @@ window.onload = function() {
         } else {
             canMove = true;
         }
+        
+        spawnObstacle();
+        
     }
 
     function render() {
@@ -121,7 +129,7 @@ window.onload = function() {
 
     }
 
-        function initializeTimer(timerObject, durationInSeconds) {
+    function initializeTimer(timerObject, durationInSeconds) {
 
         timerObject.loop(durationInSeconds * 1000,stopTimer, this);
 
@@ -149,6 +157,21 @@ window.onload = function() {
             txt_SecondsLeft.text = 0;
         }
 
+    }
+    
+    function spawnObstacle() {
+        
+        var obstacleCount = 0;
+        var obstacleX = 1;
+        
+        if (obstacleCount < 5) {
+            
+            obstacle = game.add.sprite(obstacleX, 350, 'img_nick');
+            obstacleCount += 1;
+            obstacleX += 10;
+            
+        }
+        
     }
 
 
