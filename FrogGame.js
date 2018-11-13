@@ -1,6 +1,6 @@
 window.onload = function() {
 
-    var game = new Phaser.Game(719, 461, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+    var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
     var timer;
     var sprite;
     var player;
@@ -14,7 +14,7 @@ window.onload = function() {
 
     function preload () {
 
-        game.load.image('img_placeholder', 'level1mockupplaceholder.png');
+        game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
         game.load.image('img_frogsprite', 'frogsprite.png');
         game.load.image('img_nick', 'nick.png');
         game.load.audio('snd_jump','frogjump.wav');
