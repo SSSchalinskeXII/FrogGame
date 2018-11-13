@@ -34,6 +34,8 @@ window.onload = function() {
         player = game.add.sprite(350,400, 'img_frogsprite');
 
         game.physics.arcade.enable(player);
+        
+        obstacle = game.add.sprite(1, 350, 'img_nick');
 
         // Time Left Text Elements
         var txt_TimeLeft = game.add.text(250, 425, "Time Left:")
