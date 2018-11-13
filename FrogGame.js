@@ -5,7 +5,8 @@ window.onload = function() {
     var sprite;
     var player;
     var canMove = true;
-    var jumpDistance = 1500;
+    var yjumpDistance = 1975;
+    var xjumpDistance = 1500;
     
     var obstacle;
 
@@ -94,25 +95,25 @@ window.onload = function() {
         if (cursors.up.isDown){
             //  Move up
             while(canMove){
-                player.body.velocity.y = -jumpDistance;
+                player.body.velocity.y = -yjumpDistance;
                 canMove = false;
             }
         } else if (cursors.down.isDown){
             //  Move down
             while(canMove){
-                player.body.velocity.y = jumpDistance;
+                player.body.velocity.y = yjumpDistance;
                 canMove = false;
             }
         } else if (cursors.right.isDown){
             //  Move to the right
             while(canMove){
-                player.body.velocity.x = jumpDistance;
+                player.body.velocity.x = xjumpDistance;
                 canMove = false;
             }
         } else if (cursors.left.isDown){
             //  Move to the left
             while(canMove){
-                player.body.velocity.x = -jumpDistance;
+                player.body.velocity.x = -xjumpDistance;
                 canMove = false;
             }
         } else {
