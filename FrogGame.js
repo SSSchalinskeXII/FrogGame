@@ -8,6 +8,7 @@ window.onload = function() {
     var jumpDistance = 1500;
     
     var obstacle;
+    var obstacleSpeed = 50;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
@@ -25,7 +26,7 @@ window.onload = function() {
 
         // Game Timer
         timer = game.time.create();
-        initializeTimer(timer, 5);
+        initializeTimer(timer, 5, 500);
         startTimer(timer);
 
         // Placeholder Background
@@ -34,8 +35,6 @@ window.onload = function() {
         player = game.add.sprite(350,400, 'img_frogsprite');
 
         game.physics.arcade.enable(player);
-        
-        obstacle = game.add.sprite(1, 350, 'img_nick');
 
         // Time Left Text Elements
         var txt_TimeLeft = game.add.text(250, 425, "Time Left:")
@@ -82,6 +81,8 @@ window.onload = function() {
         // Audio 
         var snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
+        
+        spawnObstacle(1, 350, 1, 'img_nick');
 
     }
 
@@ -119,7 +120,7 @@ window.onload = function() {
             canMove = true;
         }
         
-        spawnObstacle();
+        obstacle.body.velocity.x = obstacleSpeed;
         
     }
 
@@ -159,16 +160,15 @@ window.onload = function() {
 
     }
     
-    function spawnObstacle() {
+    function spawnObstacle(x, y, max, sprite) {
         
-        var obstacleCount = 0;
-        var obstacleX = 1;
+        console.log("Hello");
         
-        if (obstacleCount < 5) {
+        for (var i =0; i < max; i++) {
             
-            obstacle = game.add.sprite(obstacleX, 350, 'img_nick');
-            obstacleCount += 1;
-            obstacleX += 10;
+            console.log(i);
+            obstacle = game.add.sprite(x, y, sprite);
+            game.physics.arcade.enable(obstacle);
             
         }
         
