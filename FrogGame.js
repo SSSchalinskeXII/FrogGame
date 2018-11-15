@@ -130,6 +130,26 @@ window.onload = function() {
 
     }
 
+    function setNumberOfLives(amount) {
+
+        txt_CurrentLivesLeftValue = amount;
+
+    }
+
+    function changeNumberOfLives(addOrSubtract, amount) {
+
+        if (addOrSubtract == "add"){
+
+            txt_CurrentLivesLeftValue = txt_CurrentLivesLeftValue + amount;
+
+        } else if (addOrSubtract == "subtract") {
+
+            txt_CurrentLivesLeftValue = txt_CurrentLivesLeftValue - amount;
+
+        }
+
+    }
+
     function initializeTimer(timerObject, durationInSeconds) {
 
         timerObject.loop(durationInSeconds * 1000,stopTimer, this);
@@ -145,6 +165,8 @@ window.onload = function() {
     function stopTimer() {
 
         timer.stop();
+        changeNumberOfLives("add", 10);
+        console.log(txt_CurrentLivesLeftValue);
 
     }
 
