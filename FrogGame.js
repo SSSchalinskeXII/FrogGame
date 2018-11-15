@@ -13,6 +13,17 @@ window.onload = function() {
 
     var txt_SecondsLeft;
     var timeleft_seconds;
+    var txt_CurrentLivesLeftValue;
+    var txt_CurrentLivesLeftDisplay;
+    var txt_LivesLeftLabel;
+
+    var txt_CurrentScoreValue;
+    var txt_CurrentScoreDisplay;
+    var txt_ScoreLabel;
+    var txt_TimeLeft;
+
+    var snd_jump;
+
 
     function preload () {
 
@@ -38,49 +49,50 @@ window.onload = function() {
         game.physics.arcade.enable(player);
 
         // Time Left Text Elements
-        var txt_TimeLeft = game.add.text(300, 427, "Time:")
+        txt_TimeLeft = game.add.text(300, 427, "Time:");
         txt_TimeLeft.fill = "#FFFFFF";
         txt_TimeLeft.anchor.set(0,0);
         txt_TimeLeft.font ='Source Code Pro';
         txt_TimeLeft.fontSize ='33px';
 
         timeleft_seconds = 15;
-        txt_SecondsLeft = game.add.text(410, 427, timeleft_seconds)
+        txt_SecondsLeft = game.add.text(410, 427, timeleft_seconds);
         txt_SecondsLeft.fill = "#FF0000";
         txt_SecondsLeft.anchor.set(0,0);
         txt_SecondsLeft.font ='Source Code Pro';
         txt_SecondsLeft.fontSize ='33px';
         
         // Score Text Elements
-        var txt_ScoreLabel = game.add.text(5, 427, "Score:")
+        txt_ScoreLabel = game.add.text(5, 427, "Score:");
         txt_ScoreLabel.fill = "#FFFFFF";
         txt_ScoreLabel.anchor.set(0,0);
         txt_ScoreLabel.font ='Source Code Pro';
         txt_ScoreLabel.fontSize ='33px';
 
-        var txt_CurrentScoreValue = 17000;
-        var txt_CurrentScoreDisplay = game.add.text(130, 427, txt_CurrentScoreValue)
+        txt_CurrentScoreValue = 17000;
+        txt_CurrentScoreDisplay = game.add.text(130, 427, txt_CurrentScoreValue);
         txt_CurrentScoreDisplay.fill = "#FF0000";
         txt_CurrentScoreDisplay.anchor.set(0,0);
         txt_CurrentScoreDisplay.font ='Source Code Pro';
         txt_CurrentScoreDisplay.fontSize ='33px';
 
         // Lives Text Elements
-        var txt_LivesLeftLabel = game.add.text(561, 427, "Lives:")
+        txt_LivesLeftLabel = game.add.text(561, 427, "Lives:");
         txt_LivesLeftLabel.fill = "#FFFFFF";
         txt_LivesLeftLabel.anchor.set(0,0);
         txt_LivesLeftLabel.font ='Source Code Pro';
         txt_LivesLeftLabel.fontSize ='33px';
 
-        var txt_CurrentLivesLeftValue = 8;
-        var txt_CurrentLivesLeftDisplay = game.add.text(680, 427, txt_CurrentLivesLeftValue)
+        setNumberOfLives(8);
+        changeNumberOfLives("add", 1);  // This is just a testing line
+        txt_CurrentLivesLeftDisplay = game.add.text(680, 427, txt_CurrentLivesLeftValue);
         txt_CurrentLivesLeftDisplay.fill = "#FF0000";
         txt_CurrentLivesLeftDisplay.anchor.set(0,0);
         txt_CurrentLivesLeftDisplay.font ='Source Code Pro';
         txt_CurrentLivesLeftDisplay.fontSize ='33px';
 
         // Audio 
-        var snd_jump = game.add.audio('snd_jump');
+        snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
         spawnObstacle(1, 350, 1, 'img_nick');
@@ -128,6 +140,7 @@ window.onload = function() {
     function render() {
 
         updateTimerOSD();
+        updateLivesOSD();
 
     }
 
@@ -166,8 +179,7 @@ window.onload = function() {
     function stopTimer() {
 
         timer.stop();
-        changeNumberOfLives("add", 10);
-        console.log(txt_CurrentLivesLeftValue);
+        changeNumberOfLives("subtract",1);
 
     }
 
@@ -180,6 +192,12 @@ window.onload = function() {
         else {
             txt_SecondsLeft.text = 0;
         }
+
+    }
+
+    function updateLivesOSD() {
+
+        txt_CurrentLivesLeftDisplay.text = txt_CurrentLivesLeftValue;
 
     }
     
