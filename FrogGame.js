@@ -69,7 +69,8 @@ window.onload = function() {
         txt_ScoreLabel.font ='Source Code Pro';
         txt_ScoreLabel.fontSize ='33px';
 
-        txt_CurrentScoreValue = 17000;
+        setCurrentScore(17000);
+        changeCurrentScore('add',500);
         txt_CurrentScoreDisplay = game.add.text(130, 427, txt_CurrentScoreValue);
         txt_CurrentScoreDisplay.fill = "#FF0000";
         txt_CurrentScoreDisplay.anchor.set(0,0);
@@ -141,6 +142,7 @@ window.onload = function() {
 
         updateTimerOSD();
         updateLivesOSD();
+        updateScoreOSD();
 
     }
 
@@ -160,10 +162,17 @@ window.onload = function() {
         } else if (addOrSubtract == "subtract") {
 
             txt_CurrentScoreValue = txt_CurrentScoreValue - amount;
-
         }        
 
     }
+
+    function updateScoreOSD() {
+
+        txt_CurrentScoreDisplay.text = txt_CurrentScoreValue;
+
+    }
+
+
 
     function setNumberOfLives(amount) {
 
@@ -206,7 +215,8 @@ window.onload = function() {
     function stopTimer() {
 
         timer.stop();
-        changeNumberOfLives("subtract",1);
+        changeNumberOfLives("subtract",1); // For Testing
+        changeCurrentScore('subtract',1000); // For Testing
 
     }
 
