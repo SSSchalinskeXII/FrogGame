@@ -144,6 +144,27 @@ window.onload = function() {
 
     }
 
+
+    function setCurrentScore(amount){
+
+        txt_CurrentScoreValue = amount;
+
+    }
+
+    function changeCurrentScore(addOrSubtract, amount){
+
+        if (addOrSubtract == "add"){
+
+            txt_CurrentScoreValue = txt_CurrentScoreValue + amount;
+
+        } else if (addOrSubtract == "subtract") {
+
+            txt_CurrentScoreValue = txt_CurrentScoreValue - amount;
+
+        }        
+
+    }
+
     function setNumberOfLives(amount) {
 
         txt_CurrentLivesLeftValue = amount;
@@ -161,6 +182,12 @@ window.onload = function() {
             txt_CurrentLivesLeftValue = txt_CurrentLivesLeftValue - amount;
 
         }
+
+    }
+
+    function updateLivesOSD() {
+
+        txt_CurrentLivesLeftDisplay.text = txt_CurrentLivesLeftValue;
 
     }
 
@@ -195,11 +222,7 @@ window.onload = function() {
 
     }
 
-    function updateLivesOSD() {
 
-        txt_CurrentLivesLeftDisplay.text = txt_CurrentLivesLeftValue;
-
-    }
     
     function spawnObstacle(x, y, max, sprite) {
         
