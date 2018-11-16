@@ -148,7 +148,7 @@ window.onload = function() {
                 respawnPlayer();
             }
         }
-        console.log(playerAlive);
+        //console.log(playerAlive); // - For Testing
         
         //Obstacle Movement
         obstacle.body.velocity.x = obstacleSpeed;
@@ -246,11 +246,11 @@ window.onload = function() {
     
     function spawnObstacle(x, y, max, sprite) {
         
-        console.log("Hello");
+        // console.log("Hello"); // - For Testing
         
         for (var i =0; i < max; i++) {
             
-            console.log(i);
+            // console.log(i); // - For Testing
             obstacle = game.add.sprite(x, y, sprite);
             game.physics.arcade.enable(obstacle);
             
@@ -273,7 +273,7 @@ window.onload = function() {
     function respawnPlayer() {
         player.reset(350,400);
         playerAlive = true;
-        console.log(canMove);
+        //console.log(canMove); // For testing
     }
 
 
