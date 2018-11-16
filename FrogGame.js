@@ -4,7 +4,10 @@ window.onload = function() {
     var timer;
     var sprite;
     var player;
+    var lives;
+    var deathTime;
     var canMove = true;
+    var playerAlive = true;
     var yjumpDistance = 1975;
     var xjumpDistance = 1500;
     
@@ -38,7 +41,7 @@ window.onload = function() {
 
         // Game Timer
         timer = game.time.create();
-        initializeTimer(timer, 5, 500);
+        initializeTimer(timer, 5);
         startTimer(timer);
 
         // Placeholder Background
@@ -47,6 +50,7 @@ window.onload = function() {
         player = game.add.sprite(350,400, 'img_frogsprite');
 
         game.physics.arcade.enable(player);
+        player.body.collideWorldBounds = true;
 
         // Time Left Text Elements
         txt_TimeLeft = game.add.text(300, 427, "Time:");
@@ -84,8 +88,8 @@ window.onload = function() {
         txt_LivesLeftLabel.font ='Source Code Pro';
         txt_LivesLeftLabel.fontSize ='33px';
 
-        setNumberOfLives(8);
-        changeNumberOfLives("add", 1);  // This is just a testing line
+        setNumberOfLives(3);
+        //changeNumberOfLives("add", 1);  // This is just a testing line
         txt_CurrentLivesLeftDisplay = game.add.text(680, 427, txt_CurrentLivesLeftValue);
         txt_CurrentLivesLeftDisplay.fill = "#FF0000";
         txt_CurrentLivesLeftDisplay.anchor.set(0,0);
@@ -102,6 +106,7 @@ window.onload = function() {
 
     function update() { 
 
+        //Movement
         cursors = game.input.keyboard.createCursorKeys();
         player.body.velocity.x = 0;
         player.body.velocity.y = 0;
@@ -134,7 +139,20 @@ window.onload = function() {
             canMove = true;
         }
         
+        //Collision Detection
+        if (playerAlive) {
+            game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
+        } else {
+            //Respawn Player
+            if(game.time.now > deathTime + 1000){
+                respawnPlayer();
+            }
+        }
+        console.log(playerAlive);
+        
+        //Obstacle Movement
         obstacle.body.velocity.x = obstacleSpeed;
+        
         
     }
 
@@ -173,30 +191,21 @@ window.onload = function() {
     }
 
 
-
     function setNumberOfLives(amount) {
 
-        txt_CurrentLivesLeftValue = amount;
+        lives = amount;
 
     }
 
-    function changeNumberOfLives(addOrSubtract, amount) {
+    function subtractLife() {
 
-        if (addOrSubtract == "add"){
-
-            txt_CurrentLivesLeftValue = txt_CurrentLivesLeftValue + amount;
-
-        } else if (addOrSubtract == "subtract") {
-
-            txt_CurrentLivesLeftValue = txt_CurrentLivesLeftValue - amount;
-
-        }
+        txt_CurrentLivesLeftValue = lives--;
 
     }
 
     function updateLivesOSD() {
 
-        txt_CurrentLivesLeftDisplay.text = txt_CurrentLivesLeftValue;
+        txt_CurrentLivesLeftDisplay.text = lives;
 
     }
 
@@ -215,8 +224,9 @@ window.onload = function() {
     function stopTimer() {
 
         timer.stop();
-        changeNumberOfLives("subtract",1); // For Testing
-        changeCurrentScore('subtract',1000); // For Testing
+        frogDeath(player);
+        //changeNumberOfLives("subtract",1); // For Testing
+        //changeCurrentScore('subtract',1000); // For Testing
 
     }
 
@@ -246,6 +256,24 @@ window.onload = function() {
             
         }
         
+    }
+    
+    
+    function frogDeath(frog) {
+        playerAlive = false;
+        frog.kill();
+        if (lives < 1){
+            //TODO: gameOver();
+        }
+        subtractLife();
+        deathTime = game.time.now;
+        //TODO: reset timer
+    }
+    
+    function respawnPlayer() {
+        player.reset(350,400);
+        playerAlive = true;
+        console.log(canMove);
     }
 
 
