@@ -2,6 +2,7 @@ window.onload = function() {
 
     var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
     var timer;
+    var timerEvent;
     var sprite;
     var player;
     var lives;
@@ -40,9 +41,9 @@ window.onload = function() {
     function create () {
 
         // Game Timer
-        timer = game.time.create();
-        initializeTimer(timer, 5);
-        startTimer(timer);
+        timer = new Phaser.Timer(game, false);
+        timer.add(5 * 1000, stopTimer, this);
+        timer.start();
 
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
@@ -146,6 +147,7 @@ window.onload = function() {
             //Respawn Player
             if(game.time.now > deathTime + 1000){
                 respawnPlayer();
+
             }
         }
         //console.log(playerAlive); // - For Testing
@@ -161,6 +163,21 @@ window.onload = function() {
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
+        game.debug.text("Time until event (timer.duration): " + timer.duration, 32, 32);
+        game.debug.text("Is Timer Running? (timer.running): " + timer.running, 32, 64);
+        game.debug.text("For How Long? (timer.seconds): " + timer.seconds, 32, 96);      
+        game.debug.text("Does it have events? (timer.events): " + timer.events, 32, 128);
+        game.debug.text("Is it paused? (timer.paused): " + timer.paused, 32, 160);
+        game.debug.text("(timer.onComplete): " + timer.onComplete, 32, 192);
+        game.debug.text("(timer.onNextTick): " + timer.onNextTick, 32, 224);
+        game.debug.text("(timer.elapsed): " + timer.elapsed, 32, 256);
+        game.debug.text("(timer.expired): " + timer.expired, 32, 288);
+        game.debug.text("(timer.game): " + timer.game, 32, 310);
+        game.debug.text("(timer.length): " + timer.length, 32, 342);
+        game.debug.text("(timer.next): " + timer.next, 32, 374);
+        game.debug.text("(timer.nextTick): " + timer.nextTick, 32, 406);
+
+        //console.log(timer.running);
 
     }
 
@@ -211,19 +228,20 @@ window.onload = function() {
 
     function initializeTimer(timerObject, durationInSeconds) {
 
-        timerObject.loop(durationInSeconds * 1000,stopTimer, this);
+       // timerObject.add(durationInSeconds * 1000, stopTimer, this);
+       // timerObject.start();
 
     }
 
     function startTimer(timerObject) {
 
-        timer.start();
+       // timer.start();
 
     }
 
     function stopTimer() {
 
-        timer.stop();
+        //timer.stop();
         frogDeath(player);
         //changeNumberOfLives("subtract",1); // For Testing
         //changeCurrentScore('subtract',1000); // For Testing
@@ -278,3 +296,4 @@ window.onload = function() {
 
 
 };
+
