@@ -1,6 +1,4 @@
-window.onload = function() {
-
-    var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+    var game;
     var timer;
     var timerEvent;
     var sprite;
@@ -27,6 +25,10 @@ window.onload = function() {
     var txt_TimeLeft;
 
     var snd_jump;
+
+window.onload = function() {
+
+    var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
 
 
     function preload () {
