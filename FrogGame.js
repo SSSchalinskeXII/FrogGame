@@ -1,7 +1,8 @@
 window.onload = function() {
 
-    var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
-    var timer;
+    var countdownTimer;
+    var game;
+    var timerEvent;
     var sprite;
     var player;
     var lives;
@@ -24,30 +25,37 @@ window.onload = function() {
     var txt_CurrentScoreDisplay;
     var txt_ScoreLabel;
     var txt_TimeLeft;
-
     var snd_jump;
+
+    var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
 
 
     function preload () {
 
         game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
-        game.load.image('img_frogsprite', 'frogsprite.png');
+        game.load.image('img_frogsprite', 'frog_Sprite/frogBase.png');
         game.load.image('img_nick', 'nick.png');
         game.load.audio('snd_jump','frogjump.wav');
+        game.load.spritesheet('frogJump', 'frog_Sprite/frogJumpSprite.png', 32, 32, 2);
 
     }
 
     function create () {
 
         // Game Timer
-        timer = game.time.create();
-        initializeTimer(timer, 5);
-        startTimer(timer);
+        //timer = new Phaser.Timer(game, false);
+        countdownTimer = game.time.create(false);
+        setTimer(countdownTimer, 5);
+        countdownTimer.start();
 
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
 
         player = game.add.sprite(350,400, 'img_frogsprite');
+        player.frame = 0;
+
+        // Animating the Sprites
+        player.animations.add('jump', [0, 1], 2, 2)
 
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
@@ -116,24 +124,32 @@ window.onload = function() {
             while(canMove){
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 0;
             }
         } else if (cursors.down.isDown){
             //  Move down
             while(canMove){
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 180;
             }
         } else if (cursors.right.isDown){
             //  Move to the right
             while(canMove){
                 player.body.velocity.x = xjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 90;
             }
         } else if (cursors.left.isDown){
             //  Move to the left
             while(canMove){
                 player.body.velocity.x = -xjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 270;
             }
         } else {
             canMove = true;
@@ -146,9 +162,10 @@ window.onload = function() {
             //Respawn Player
             if(game.time.now > deathTime + 1000){
                 respawnPlayer();
+
             }
         }
-        console.log(playerAlive);
+        //console.log(playerAlive); // - For Testing
         
         //Obstacle Movement
         obstacle.body.velocity.x = obstacleSpeed;
@@ -161,6 +178,8 @@ window.onload = function() {
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
+        displayTimerDebug(countdownTimer, false);
+
 
     }
 
@@ -209,21 +228,22 @@ window.onload = function() {
 
     }
 
-    function initializeTimer(timerObject, durationInSeconds) {
+    function setTimer(timerObject, durationInSeconds) {
 
-        timerObject.loop(durationInSeconds * 1000,stopTimer, this);
+       // timerObject.add(durationInSeconds * 1000, timerEnded, this);
+       // timerObject.start();
+       countdownTimer.add(durationInSeconds * 1000, timerEnded, this);
 
     }
 
     function startTimer(timerObject) {
 
-        timer.start();
+       // timer.start();
 
     }
 
-    function stopTimer() {
+    function timerEnded() {
 
-        timer.stop();
         frogDeath(player);
         //changeNumberOfLives("subtract",1); // For Testing
         //changeCurrentScore('subtract',1000); // For Testing
@@ -232,8 +252,8 @@ window.onload = function() {
 
     function updateTimerOSD() {
 
-        if (timer.running) {
-            timeleft_seconds = timer.duration.toFixed(0) / 1000;
+        if (countdownTimer.running) {
+            timeleft_seconds = countdownTimer.duration.toFixed(0) / 1000;
             txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
         }
         else {
@@ -242,15 +262,41 @@ window.onload = function() {
 
     }
 
+    function displayTimerDebug(timerObject, enabled) {
+        
+        if (enabled === true) {
+
+            //console.log('Timer Debug Display enabled');
+            game.debug.text("Time until event (timer.duration): " + timerObject.duration, 32, 32);
+            game.debug.text("Is Timer Running? (timer.running): " + timerObject.running, 32, 64);
+            game.debug.text("For How Long? (timer.seconds): " + timerObject.seconds, 32, 96);      
+            game.debug.text("Does it have events? (timer.events): " + timerObject.events, 32, 128);
+            game.debug.text("Is it paused? (timer.paused): " + timerObject.paused, 32, 160);
+            game.debug.text("(timer.onComplete): " + timerObject.onComplete, 32, 192);
+            game.debug.text("(timer.onNextTick): " + timerObject.onNextTick, 32, 224);
+            game.debug.text("(timer.elapsed): " + timerObject.elapsed, 32, 256);
+            game.debug.text("(timer.expired): " + timerObject.expired, 32, 288);
+            game.debug.text("(timer.game): " + timerObject.game, 32, 310);
+            game.debug.text("(timer.length): " + timerObject.length, 32, 342);
+            game.debug.text("(timer.next): " + timerObject.next, 32, 374);
+            game.debug.text("(timer.nextTick): " + timerObject.nextTick, 32, 406);
+    
+        } else if (enabled == false) {
+    
+            //console.log('Timer Debug Display disabled');
+        }
+    
+    }
+
 
     
     function spawnObstacle(x, y, max, sprite) {
         
-        console.log("Hello");
+        // console.log("Hello"); // - For Testing
         
         for (var i =0; i < max; i++) {
             
-            console.log(i);
+            // console.log(i); // - For Testing
             obstacle = game.add.sprite(x, y, sprite);
             game.physics.arcade.enable(obstacle);
             
@@ -273,8 +319,10 @@ window.onload = function() {
     function respawnPlayer() {
         player.reset(350,400);
         playerAlive = true;
-        console.log(canMove);
+        setTimer(countdownTimer,5);
+        //console.log(canMove); // For testing
     }
 
 
 };
+
