@@ -34,9 +34,10 @@ window.onload = function() {
     function preload () {
 
         game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
-        game.load.image('img_frogsprite', 'frogsprite.png');
+        game.load.image('img_frogsprite', 'frog_Sprite/frogBase.png');
         game.load.image('img_nick', 'nick.png');
         game.load.audio('snd_jump','frogjump.wav');
+        game.load.spritesheet('frogJump', 'frog_Sprite/frogJumpSprite.png', 32, 32, 2);
 
     }
 
@@ -51,6 +52,10 @@ window.onload = function() {
         game.add.sprite(0,0, 'img_placeholder');
 
         player = game.add.sprite(350,400, 'img_frogsprite');
+        player.frame = 0;
+
+        // Animating the Sprites
+        player.animations.add('jump', [0, 1], 2, 2)
 
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
@@ -119,24 +124,32 @@ window.onload = function() {
             while(canMove){
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 0;
             }
         } else if (cursors.down.isDown){
             //  Move down
             while(canMove){
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 180;
             }
         } else if (cursors.right.isDown){
             //  Move to the right
             while(canMove){
                 player.body.velocity.x = xjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 90;
             }
         } else if (cursors.left.isDown){
             //  Move to the left
             while(canMove){
                 player.body.velocity.x = -xjumpDistance;
                 canMove = false;
+                player.animations.play('jump');
+                player.angle = 270;
             }
         } else {
             canMove = true;
