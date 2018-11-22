@@ -43,19 +43,22 @@ window.onload = function() {
     function create () {
 
         // Game Timer
-        //timer = new Phaser.Timer(game, false);
         countdownTimer = game.time.create(false);
-        setTimer(countdownTimer, 5);
+        setTimer(countdownTimer, 30);
         countdownTimer.start();
 
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
 
-        player = game.add.sprite(350,400, 'img_frogsprite');
+        player = game.add.sprite(350,428, 'img_frogsprite');
         player.frame = 0;
 
+        player.anchor.set(0.5);
+        player.pivot.x = (16);
+        player.pivot.y = (16);
+
         // Animating the Sprites
-        player.animations.add('jump', [0, 1], 2, 2)
+        player.animations.add('jump', [0, 1], 2, 2);
 
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
@@ -125,15 +128,18 @@ window.onload = function() {
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
                 player.animations.play('jump');
-                player.angle = 0;
+                //player.angle = 0;
+
             }
         } else if (cursors.down.isDown){
             //  Move down
             while(canMove){
+                
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
                 player.animations.play('jump');
-                player.angle = 180;
+                //player.angle = 180;
+                
             }
         } else if (cursors.right.isDown){
             //  Move to the right
@@ -141,7 +147,8 @@ window.onload = function() {
                 player.body.velocity.x = xjumpDistance;
                 canMove = false;
                 player.animations.play('jump');
-                player.angle = 90;
+                //player.angle = 90;
+
             }
         } else if (cursors.left.isDown){
             //  Move to the left
@@ -149,7 +156,8 @@ window.onload = function() {
                 player.body.velocity.x = -xjumpDistance;
                 canMove = false;
                 player.animations.play('jump');
-                player.angle = 270;
+                //player.angle = 270;
+
             }
         } else {
             canMove = true;
@@ -170,6 +178,7 @@ window.onload = function() {
         //Obstacle Movement
         obstacle.body.velocity.x = obstacleSpeed;
         
+
         
     }
 
@@ -178,7 +187,10 @@ window.onload = function() {
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
-        displayTimerDebug(countdownTimer, false);
+        //displayTimerDebug(countdownTimer, true); // - For Testing
+        //displaySpriteDebug(player, true); // - For Testing
+
+
 
 
     }
@@ -228,15 +240,15 @@ window.onload = function() {
 
     }
 
-    function setTimer(timerObject, durationInSeconds) {
+    function setTimer(spriteObject, durationInSeconds) {
 
-       // timerObject.add(durationInSeconds * 1000, timerEnded, this);
-       // timerObject.start();
+       // spriteObject.add(durationInSeconds * 1000, timerEnded, this);
+       // spriteObject.start();
        countdownTimer.add(durationInSeconds * 1000, timerEnded, this);
 
     }
 
-    function startTimer(timerObject) {
+    function startTimer(spriteObject) {
 
        // timer.start();
 
@@ -288,6 +300,31 @@ window.onload = function() {
     
     }
 
+    function displaySpriteDebug(spriteObject, enabled) {
+        
+        if (enabled === true) {
+
+            //console.log('Timer Debug Display enabled');
+            game.debug.body(spriteObject);
+            game.debug.text("spriteObject.anchor: " + spriteObject.anchor, 32, 32);
+            game.debug.text("spriteObject.rotation: " + spriteObject.rotation, 32, 64);
+            game.debug.text("spriteObject.pivot: " + spriteObject.pivot, 32, 96);      
+            game.debug.text("centerX" + spriteObject.centerX, 32, 128);
+            game.debug.text("centerY" + spriteObject.centerY, 32, 160);
+            game.debug.text("body.offset" + spriteObject.body.offset, 32, 192);
+            game.debug.text("body.position" + spriteObject.body.position, 32, 224);
+            game.debug.text("body.rotation: " + spriteObject.body.rotation, 32, 256);
+            game.debug.geom(new Phaser.Point(spriteObject.pivot.x, spriteObject.pivot.y), '#FF88FF');
+            game.debug.geom(new Phaser.Point(spriteObject.anchor.x, spriteObject.anchor.y), '#FFFFFF');
+            game.debug.spriteInfo(spriteObject, 32, 288);
+    
+        } else if (enabled == false) {
+    
+            //console.log('Timer Debug Display disabled');
+        }
+    
+    }
+
 
     
     function spawnObstacle(x, y, max, sprite) {
@@ -313,16 +350,16 @@ window.onload = function() {
         }
         subtractLife();
         deathTime = game.time.now;
-        //TODO: reset timer
     }
     
     function respawnPlayer() {
-        player.reset(350,400);
+        player.reset(350,428);
         playerAlive = true;
-        setTimer(countdownTimer,5);
+        setTimer(countdownTimer,30);   
         //console.log(canMove); // For testing
     }
 
 
 };
+
 
