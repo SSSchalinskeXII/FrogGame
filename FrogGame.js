@@ -29,16 +29,26 @@ window.onload = function() {
     var txt_TimeLeft;
     var txt_DynamicPrompt;
     var txt_DynamicPromptMessage = "";
+    var DynamicPromptTimeOfInitialDisplay;
     var snd_jump;
 
-    var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+    var goal1;
+    var goal2;
+    var goal3;
+    var goal4;
+    var goal5;
 
+    var frogsSaved = 0;
+
+
+    var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
 
     function preload () {
 
         game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
         game.load.image('img_frogsprite', 'frog_Sprite/frogBase.png');
         game.load.image('img_nick', 'nick.png');
+        game.load.image('img_goal', 'nick.png');
         game.load.audio('snd_jump','frogjump.wav');
         game.load.spritesheet('frogJump', 'frog_Sprite/frogJumpSprite.png', 32, 32, 2);
 
@@ -49,7 +59,7 @@ window.onload = function() {
         // 
         // Initial Game State
         globalGameState = "gameplay";
-        countdownTimerDuration = 5;
+        countdownTimerDuration = 30;
 
         // Game Timer
         countdownTimer = game.time.create(false);
@@ -65,6 +75,41 @@ window.onload = function() {
         player.anchor.set(0.5);
         player.pivot.x = (16);
         player.pivot.y = (16);
+
+        goal1 = game.add.sprite(64,4, 'img_goal');
+        goal1.alpha = 0.2;
+        goal1.takenCareOf = false;
+
+        game.physics.arcade.enable(goal1);
+
+        goal2 = game.add.sprite(192,4, 'img_goal');
+        goal2.alpha = 0.2;
+        goal2.takenCareOf = false;
+
+        game.physics.arcade.enable(goal2);
+
+        goal3 = game.add.sprite(352,4, 'img_goal');
+        goal3.alpha = 0.2;
+        goal3.takenCareOf = false;
+
+        game.physics.arcade.enable(goal3);
+
+
+        goal4 = game.add.sprite(480,4, 'img_goal');
+        goal4.alpha = 0.2;
+        goal4.takenCareOf = false;
+
+        game.physics.arcade.enable(goal4);
+
+
+
+        goal5 = game.add.sprite(608,4, 'img_goal');
+        goal5.alpha = 0.2;
+        goal5.takenCareOf = false;
+
+        game.physics.arcade.enable(goal5);
+
+        
 
         // Animating the Sprites
         player.animations.add('jump', [0, 1], 2, 2);
@@ -93,8 +138,8 @@ window.onload = function() {
         txt_ScoreLabel.font ='Source Code Pro';
         txt_ScoreLabel.fontSize ='33px';
 
-        setCurrentScore(17000);
-        changeCurrentScore('add',500);
+        setCurrentScore(0);
+        // changeCurrentScore('add',500); // - For Testing
         txt_CurrentScoreDisplay = game.add.text(130, 427, txt_CurrentScoreValue);
         txt_CurrentScoreDisplay.fill = "#FF0000";
         txt_CurrentScoreDisplay.anchor.set(0,0);
@@ -129,6 +174,8 @@ window.onload = function() {
         //snd_jump.play();
         
         spawnObstacle(1, 350, 1, 'img_nick');
+
+
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -166,6 +213,13 @@ window.onload = function() {
 
                 console.log('Gamestate Changed To: ' + globalGameState);
                 gameOver();
+
+            break;
+
+            case "beatTheGame":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+                beatTheGame();
 
             break;
 
@@ -359,6 +413,8 @@ window.onload = function() {
             txt_DynamicPromptMessage = "";
             setTimer(countdownTimer, countdownTimerDuration);
             setNumberOfLives(5);
+            goal1.alpha = 0.2;
+            goal1.takenCareOf = false;
             console.log('department of the interior:' + globalGameState);
             respawnPlayer();
             //globalGameState = "gameplay";                    
@@ -436,6 +492,12 @@ window.onload = function() {
         //Collision Detection
         if (playerAlive) {
             game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
+            game.physics.arcade.collide(player, goal1, reachedGoal, null, this);
+            game.physics.arcade.collide(player, goal2, reachedGoal, null, this);
+            game.physics.arcade.collide(player, goal3, reachedGoal, null, this);
+            game.physics.arcade.collide(player, goal4, reachedGoal, null, this);
+            game.physics.arcade.collide(player, goal5, reachedGoal, null, this);
+
         } else {
 
             }
@@ -455,8 +517,49 @@ window.onload = function() {
         frogCollisionDetection();
         obstacleMovement();
 
+        if (game.time.now > DynamicPromptTimeOfInitialDisplay + 5000 && txt_DynamicPromptMessage != ""){
+
+            txt_DynamicPromptMessage = "";
+
+        }
+
+        if (frogsSaved == 5) {
+
+            globalGameState = beatTheGame();
+
+        }
+
     }
 
+    function reachedGoal(playerObject,goalObject) {
+
+        if (goalObject.takenCareOf == false) {
+            console.log("You Saved a Frog!");
+            frogsSaved++;
+            changeCurrentScore('add',500);
+            player.reset(350,428);
+            goalObject.alpha = 1.0;
+            goalObject.takenCareOf = true;
+        } else {
+            console.log("Your Frog is in Another Castle");
+            changeCurrentScore('subtract',100);
+            DynamicPromptTimeOfInitialDisplay = game.time.now;
+            txt_DynamicPromptMessage = "Your Frog is\nin Another Castle";
+            player.reset(350,428);
+        }
+
+    }
+
+
+    function beatTheGame() {
+
+            console.log('Game Beaten!');
+            player.kill();
+            txt_DynamicPromptMessage = "YOU HAVE SAVED\nALL FIVE FROGS\nTHE END";
+            countdownTimer.removeAll();
+
+
+    }
 
 };
 
