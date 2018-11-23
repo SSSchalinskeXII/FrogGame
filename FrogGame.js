@@ -124,12 +124,14 @@ window.onload = function() {
 
     function update() { 
 
+
         //Game State Logic
         switch (globalGameState) {
 
             case "gameplay":
 
                 console.log('Gamestate Changed To: ' + globalGameState);
+                gameplay();
 
             break;
 
@@ -137,6 +139,7 @@ window.onload = function() {
             case "reachedGoal":
 
                 console.log('Gamestate Changed To: ' + globalGameState);
+                reachedGoal();
 
             break;
 
@@ -156,68 +159,6 @@ window.onload = function() {
 
         }
 
-        //Movement
-        cursors = game.input.keyboard.createCursorKeys();
-        player.body.velocity.x = 0;
-        player.body.velocity.y = 0;
-
-        if (cursors.up.isDown){
-            //  Move up
-            while(canMove){
-                player.body.velocity.y = -yjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 0;
-
-            }
-        } else if (cursors.down.isDown){
-            //  Move down
-            while(canMove){
-                
-                player.body.velocity.y = yjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 180;
-                
-            }
-        } else if (cursors.right.isDown){
-            //  Move to the right
-            while(canMove){
-                player.body.velocity.x = xjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 90;
-
-            }
-        } else if (cursors.left.isDown){
-            //  Move to the left
-            while(canMove){
-                player.body.velocity.x = -xjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 270;
-
-            }
-        } else {
-            canMove = true;
-        }
-        
-        //Collision Detection
-        if (playerAlive) {
-            game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
-        } else {
-            //Respawn Player
-
-
-            }
-        
-        //console.log(playerAlive); // - For Testing
-        
-        //Obstacle Movement
-        obstacle.body.velocity.x = obstacleSpeed;
-        
-
-        
     }
 
     function render() {
@@ -295,14 +236,12 @@ window.onload = function() {
     function timerEnded() {
 
         frogDeath(player);
-        //changeNumberOfLives("subtract",1); // For Testing
-        //changeCurrentScore('subtract',1000); // For Testing
 
     }
 
     function updateTimerOSD() {
 
-        if (countdownTimer.running) {
+        if (countdownTimer.length > 0) {
             timeleft_seconds = countdownTimer.duration.toFixed(0) / 1000;
             txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
         }
@@ -422,6 +361,83 @@ window.onload = function() {
         } else if (lives == 0) {
              globalGameState = "gameOver";
         }
+
+    }
+
+
+    function frogMovement() {
+
+                //Movement
+        cursors = game.input.keyboard.createCursorKeys();
+        player.body.velocity.x = 0;
+        player.body.velocity.y = 0;
+
+        if (cursors.up.isDown){
+            //  Move up
+            while(canMove){
+                player.body.velocity.y = -yjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 0;
+
+            }
+        } else if (cursors.down.isDown){
+            //  Move down
+            while(canMove){
+                
+                player.body.velocity.y = yjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 180;
+                
+            }
+        } else if (cursors.right.isDown){
+            //  Move to the right
+            while(canMove){
+                player.body.velocity.x = xjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 90;
+
+            }
+        } else if (cursors.left.isDown){
+            //  Move to the left
+            while(canMove){
+                player.body.velocity.x = -xjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 270;
+
+            }
+        } else {
+            canMove = true;
+        }
+
+    }
+
+    function frogCollisionDetection() {
+
+        //Collision Detection
+        if (playerAlive) {
+            game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
+        } else {
+
+            }
+
+    }
+
+    function obstacleMovement() {
+
+        obstacle.body.velocity.x = obstacleSpeed;
+
+    }
+
+
+    function gameplay() {
+
+        frogMovement();
+        frogCollisionDetection();
+        obstacleMovement();
 
     }
 
