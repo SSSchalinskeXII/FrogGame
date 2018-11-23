@@ -1,6 +1,8 @@
 window.onload = function() {
 
+    var globalGameState;
     var countdownTimer;
+    var countdownTimerDuration;
     var game;
     var timerEvent;
     var sprite;
@@ -25,6 +27,8 @@ window.onload = function() {
     var txt_CurrentScoreDisplay;
     var txt_ScoreLabel;
     var txt_TimeLeft;
+    var txt_DynamicPrompt;
+    var txt_DynamicPromptMessage = "";
     var snd_jump;
 
     var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
@@ -42,9 +46,14 @@ window.onload = function() {
 
     function create () {
 
+        // 
+        // Initial Game State
+        globalGameState = "gameplay";
+        countdownTimerDuration = 5;
+
         // Game Timer
         countdownTimer = game.time.create(false);
-        setTimer(countdownTimer, 30);
+        setTimer(countdownTimer, countdownTimerDuration);
         countdownTimer.start();
 
         // Placeholder Background
@@ -99,7 +108,7 @@ window.onload = function() {
         txt_LivesLeftLabel.font ='Source Code Pro';
         txt_LivesLeftLabel.fontSize ='33px';
 
-        setNumberOfLives(3);
+        setNumberOfLives(5);
         //changeNumberOfLives("add", 1);  // This is just a testing line
         txt_CurrentLivesLeftDisplay = game.add.text(680, 427, txt_CurrentLivesLeftValue);
         txt_CurrentLivesLeftDisplay.fill = "#FF0000";
@@ -107,91 +116,73 @@ window.onload = function() {
         txt_CurrentLivesLeftDisplay.font ='Source Code Pro';
         txt_CurrentLivesLeftDisplay.fontSize ='33px';
 
+
+        // Dynamic Text Prompt
+        txt_DynamicPrompt = game.add.text(130, 213, "");
+        txt_DynamicPrompt.fill = "#FF0000";
+        txt_DynamicPrompt.anchor.set(0,0);
+        txt_DynamicPrompt.font ='Source Code Pro';
+        txt_DynamicPrompt.fontSize ='45px';
+
         // Audio 
         snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
         spawnObstacle(1, 350, 1, 'img_nick');
 
+        input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+
     }
 
     function update() { 
 
-        //Movement
-        cursors = game.input.keyboard.createCursorKeys();
-        player.body.velocity.x = 0;
-        player.body.velocity.y = 0;
 
-        if (cursors.up.isDown){
-            //  Move up
-            while(canMove){
-                player.body.velocity.y = -yjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 0;
+        //Game State Logic
+        switch (globalGameState) {
 
-            }
-        } else if (cursors.down.isDown){
-            //  Move down
-            while(canMove){
-                
-                player.body.velocity.y = yjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 180;
-                
-            }
-        } else if (cursors.right.isDown){
-            //  Move to the right
-            while(canMove){
-                player.body.velocity.x = xjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 90;
+            case "gameplay":
 
-            }
-        } else if (cursors.left.isDown){
-            //  Move to the left
-            while(canMove){
-                player.body.velocity.x = -xjumpDistance;
-                canMove = false;
-                player.animations.play('jump');
-                //player.angle = 270;
+                console.log('Gamestate Changed To: ' + globalGameState);
+                gameplay();
 
-            }
-        } else {
-            canMove = true;
+            break;
+
+
+            case "reachedGoal":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+                reachedGoal();
+
+            break;
+
+            case "death":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+                death();
+
+            break;
+
+            case "gameOver":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+                gameOver();
+
+            break;
+
         }
-        
-        //Collision Detection
-        if (playerAlive) {
-            game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
-        } else {
-            //Respawn Player
-            if(game.time.now > deathTime + 1000){
-                respawnPlayer();
 
-            }
-        }
-        //console.log(playerAlive); // - For Testing
-        
-        //Obstacle Movement
-        obstacle.body.velocity.x = obstacleSpeed;
-        
-
-        
     }
 
     function render() {
 
+
+        game.debug.text("Current Game State: " + globalGameState, 32, 32);
+
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
-        //displayTimerDebug(countdownTimer, true); // - For Testing
-        //displaySpriteDebug(player, true); // - For Testing
-
-
-
+        //dynamicPrompt();
+        txt_DynamicPrompt.text = txt_DynamicPromptMessage;
 
     }
 
@@ -230,7 +221,9 @@ window.onload = function() {
 
     function subtractLife() {
 
-        txt_CurrentLivesLeftValue = lives--;
+        lives = lives - 1;
+        txt_CurrentLivesLeftValue = lives;
+        console.log("life subtracted, current amount is " + txt_CurrentLivesLeftValue  + " current time is: " + game.time.now);
 
     }
 
@@ -257,14 +250,12 @@ window.onload = function() {
     function timerEnded() {
 
         frogDeath(player);
-        //changeNumberOfLives("subtract",1); // For Testing
-        //changeCurrentScore('subtract',1000); // For Testing
 
     }
 
     function updateTimerOSD() {
 
-        if (countdownTimer.running) {
+        if (countdownTimer.length > 0) {
             timeleft_seconds = countdownTimer.duration.toFixed(0) / 1000;
             txt_SecondsLeft.text = timeleft_seconds.toFixed(0);
         }
@@ -343,20 +334,127 @@ window.onload = function() {
     
     
     function frogDeath(frog) {
-        playerAlive = false;
-        frog.kill();
-        if (lives < 1){
-            //TODO: gameOver();
-        }
-        subtractLife();
+        countdownTimer.removeAll();
+        console.log("frogdeath called at: " + game.time.now);
         deathTime = game.time.now;
+        playerAlive = false;
+        subtractLife();
+        frog.kill();
+        globalGameState = "death";  
     }
     
     function respawnPlayer() {
+        globalGameState="gameplay";
         player.reset(350,428);
         playerAlive = true;
-        setTimer(countdownTimer,30);   
+        countdownTimer.removeAll();
+        setTimer(countdownTimer, countdownTimerDuration);   
         //console.log(canMove); // For testing
+    }
+
+    function gameOver() {
+
+        if(game.time.now > deathTime + 3000 && input_EnterKey.downDuration(500))
+        {
+            txt_DynamicPromptMessage = "";
+            setTimer(countdownTimer, countdownTimerDuration);
+            setNumberOfLives(5);
+            console.log('department of the interior:' + globalGameState);
+            respawnPlayer();
+            //globalGameState = "gameplay";                    
+        } else {
+
+            console.log('whatever');
+            txt_DynamicPromptMessage = "GAME OVER\nPress\nENTER KEY\nto continue";
+        }
+
+    }
+
+    function death() {
+
+        if (lives > 0 && game.time.now > deathTime + 1000) {
+            respawnPlayer();
+        } else if (lives == 0) {
+             globalGameState = "gameOver";
+        }
+
+    }
+
+
+    function frogMovement() {
+
+        //Movement
+        cursors = game.input.keyboard.createCursorKeys();
+        player.body.velocity.x = 0;
+        player.body.velocity.y = 0;
+
+        if (cursors.up.isDown) {
+            //  Move up
+            while(canMove){
+                player.body.velocity.y = -yjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 0;
+
+            }
+        } else if (cursors.down.isDown){
+            //  Move down
+            while(canMove){
+                
+                player.body.velocity.y = yjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 180;
+                
+            }
+        } else if (cursors.right.isDown){
+            //  Move to the right
+            while(canMove){
+                player.body.velocity.x = xjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 90;
+
+            }
+        } else if (cursors.left.isDown){
+            //  Move to the left
+            while(canMove){
+                player.body.velocity.x = -xjumpDistance;
+                canMove = false;
+                player.animations.play('jump');
+                //player.angle = 270;
+
+            }
+        } else {
+            canMove = true;
+        }
+
+    }
+
+    function frogCollisionDetection() {
+
+        //Collision Detection
+        if (playerAlive) {
+            game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
+        } else {
+
+            }
+
+    }
+
+    function obstacleMovement() {
+
+        obstacle.body.velocity.x = obstacleSpeed;
+
+    }
+
+
+    function gameplay() {
+
+        frogMovement();
+        frogCollisionDetection();
+        obstacleMovement();
+
     }
 
 
