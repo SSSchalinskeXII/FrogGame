@@ -27,6 +27,8 @@ window.onload = function() {
     var txt_CurrentScoreDisplay;
     var txt_ScoreLabel;
     var txt_TimeLeft;
+    var txt_DynamicPrompt;
+    var txt_DynamicPromptMessage = "";
     var snd_jump;
 
     var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
@@ -114,11 +116,21 @@ window.onload = function() {
         txt_CurrentLivesLeftDisplay.font ='Source Code Pro';
         txt_CurrentLivesLeftDisplay.fontSize ='33px';
 
+
+        // Dynamic Text Prompt
+        txt_DynamicPrompt = game.add.text(130, 213, "");
+        txt_DynamicPrompt.fill = "#FF0000";
+        txt_DynamicPrompt.anchor.set(0,0);
+        txt_DynamicPrompt.font ='Source Code Pro';
+        txt_DynamicPrompt.fontSize ='45px';
+
         // Audio 
         snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
         spawnObstacle(1, 350, 1, 'img_nick');
+
+        input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
     }
 
@@ -169,6 +181,8 @@ window.onload = function() {
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
+        //dynamicPrompt();
+        txt_DynamicPrompt.text = txt_DynamicPromptMessage;
 
     }
 
@@ -340,16 +354,18 @@ window.onload = function() {
 
     function gameOver() {
 
-        if(game.time.now > deathTime + 5000)
+        if(game.time.now > deathTime + 3000 && input_EnterKey.downDuration(500))
         {
+            txt_DynamicPromptMessage = "";
             setTimer(countdownTimer, countdownTimerDuration);
             setNumberOfLives(5);
             console.log('department of the interior:' + globalGameState);
             respawnPlayer();
-            globalGameState = "gameplay";                    
+            //globalGameState = "gameplay";                    
         } else {
 
             console.log('whatever');
+            txt_DynamicPromptMessage = "GAME OVER\nPress\nENTER KEY\nto continue";
         }
 
     }
@@ -367,12 +383,12 @@ window.onload = function() {
 
     function frogMovement() {
 
-                //Movement
+        //Movement
         cursors = game.input.keyboard.createCursorKeys();
         player.body.velocity.x = 0;
         player.body.velocity.y = 0;
 
-        if (cursors.up.isDown){
+        if (cursors.up.isDown) {
             //  Move up
             while(canMove){
                 player.body.velocity.y = -yjumpDistance;
@@ -440,6 +456,7 @@ window.onload = function() {
         obstacleMovement();
 
     }
+
 
 };
 
