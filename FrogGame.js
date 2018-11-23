@@ -1,6 +1,8 @@
 window.onload = function() {
 
+    var globalGameState;
     var countdownTimer;
+    var countdownTimerDuration;
     var game;
     var timerEvent;
     var sprite;
@@ -42,9 +44,14 @@ window.onload = function() {
 
     function create () {
 
+        // 
+        // Initial Game State
+        globalGameState = "gameplay";
+        countdownTimerDuration = 5;
+
         // Game Timer
         countdownTimer = game.time.create(false);
-        setTimer(countdownTimer, 30);
+        setTimer(countdownTimer, countdownTimerDuration);
         countdownTimer.start();
 
         // Placeholder Background
@@ -99,7 +106,7 @@ window.onload = function() {
         txt_LivesLeftLabel.font ='Source Code Pro';
         txt_LivesLeftLabel.fontSize ='33px';
 
-        setNumberOfLives(3);
+        setNumberOfLives(5);
         //changeNumberOfLives("add", 1);  // This is just a testing line
         txt_CurrentLivesLeftDisplay = game.add.text(680, 427, txt_CurrentLivesLeftValue);
         txt_CurrentLivesLeftDisplay.fill = "#FF0000";
@@ -116,6 +123,38 @@ window.onload = function() {
     }
 
     function update() { 
+
+        //Game State Logic
+        switch (globalGameState) {
+
+            case "gameplay":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+
+            break;
+
+
+            case "reachedGoal":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+
+            break;
+
+            case "death":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+                death();
+
+            break;
+
+            case "gameOver":
+
+                console.log('Gamestate Changed To: ' + globalGameState);
+                gameOver();
+
+            break;
+
+        }
 
         //Movement
         cursors = game.input.keyboard.createCursorKeys();
@@ -168,11 +207,10 @@ window.onload = function() {
             game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
         } else {
             //Respawn Player
-            if(game.time.now > deathTime + 1000){
-                respawnPlayer();
+
 
             }
-        }
+        
         //console.log(playerAlive); // - For Testing
         
         //Obstacle Movement
@@ -184,14 +222,12 @@ window.onload = function() {
 
     function render() {
 
+
+        game.debug.text("Current Game State: " + globalGameState, 32, 32);
+
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
-        //displayTimerDebug(countdownTimer, true); // - For Testing
-        //displaySpriteDebug(player, true); // - For Testing
-
-
-
 
     }
 
@@ -230,7 +266,9 @@ window.onload = function() {
 
     function subtractLife() {
 
-        txt_CurrentLivesLeftValue = lives--;
+        lives = lives - 1;
+        txt_CurrentLivesLeftValue = lives;
+        console.log("life subtracted, current amount is " + txt_CurrentLivesLeftValue  + " current time is: " + game.time.now);
 
     }
 
@@ -343,22 +381,49 @@ window.onload = function() {
     
     
     function frogDeath(frog) {
-        playerAlive = false;
-        frog.kill();
-        if (lives < 1){
-            //TODO: gameOver();
-        }
-        subtractLife();
+        countdownTimer.removeAll();
+        console.log("frogdeath called at: " + game.time.now);
         deathTime = game.time.now;
+        playerAlive = false;
+        subtractLife();
+        frog.kill();
+        globalGameState = "death";  
     }
     
     function respawnPlayer() {
+        globalGameState="gameplay";
         player.reset(350,428);
         playerAlive = true;
-        setTimer(countdownTimer,30);   
+        countdownTimer.removeAll();
+        setTimer(countdownTimer, countdownTimerDuration);   
         //console.log(canMove); // For testing
     }
 
+    function gameOver() {
+
+        if(game.time.now > deathTime + 5000)
+        {
+            setTimer(countdownTimer, countdownTimerDuration);
+            setNumberOfLives(5);
+            console.log('department of the interior:' + globalGameState);
+            respawnPlayer();
+            globalGameState = "gameplay";                    
+        } else {
+
+            console.log('whatever');
+        }
+
+    }
+
+    function death() {
+
+        if (lives > 0 && game.time.now > deathTime + 1000) {
+            respawnPlayer();
+        } else if (lives == 0) {
+             globalGameState = "gameOver";
+        }
+
+    }
 
 };
 
