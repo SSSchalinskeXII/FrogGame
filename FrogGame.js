@@ -94,22 +94,17 @@ window.onload = function() {
 
         game.physics.arcade.enable(goal3);
 
-
         goal4 = game.add.sprite(480,4, 'img_goal');
         goal4.alpha = 0.2;
         goal4.takenCareOf = false;
 
         game.physics.arcade.enable(goal4);
 
-
-
         goal5 = game.add.sprite(608,4, 'img_goal');
         goal5.alpha = 0.2;
         goal5.takenCareOf = false;
 
         game.physics.arcade.enable(goal5);
-
-        
 
         // Animating the Sprites
         player.animations.add('jump', [0, 1], 2, 2);
@@ -174,8 +169,6 @@ window.onload = function() {
         //snd_jump.play();
         
         spawnObstacle(1, 350, 1, 'img_nick');
-
-
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -540,6 +533,13 @@ window.onload = function() {
             player.reset(350,428);
             goalObject.alpha = 1.0;
             goalObject.takenCareOf = true;
+            DynamicPromptTimeOfInitialDisplay = game.time.now;
+            if (frogsSaved == 1){
+                txt_DynamicPromptMessage = "YOU HAVE SAVED\n " + frogsSaved + " FROG";    
+            } else if (frogsSaved > 1) {
+                txt_DynamicPromptMessage = "YOU HAVE SAVED\n " + frogsSaved + " FROGS";    
+            }
+            
         } else {
             console.log("Your Frog is in Another Castle");
             changeCurrentScore('subtract',100);
