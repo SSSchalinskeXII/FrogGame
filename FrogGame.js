@@ -150,8 +150,17 @@ window.onload = function() {
         }
         console.log(playerAlive);
         
-        //Obstacle Movement
-        obstacle.body.velocity.x = obstacleSpeed;
+        if (obstacle.inCamera) {
+        
+            obstacle.body.velocity.x = obstacleSpeed;
+        
+        } else if (!obstacle.inCamera) {
+            
+            obstacle.destroy();
+            console.log("Balls");
+            spawnObstacle(1, 350, 1, 'img_nick');
+            
+        }
         
         
     }
