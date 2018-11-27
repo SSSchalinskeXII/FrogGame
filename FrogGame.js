@@ -482,7 +482,33 @@ window.onload = function() {
 
     function frogCollisionDetection() {
 
-        //Collision Detection
+        //Revamped Collision detection
+        if (checkOverlap(player, obstacle)){
+            frogDeath(player);
+        }
+        
+        if (checkOverlap(player, goal1)){
+            reachedGoal(player, goal1);
+        }
+        
+        if (checkOverlap(player, goal2)){
+            reachedGoal(player, goal2);
+        }
+        
+        if (checkOverlap(player, goal3)){
+            reachedGoal(player, goal3);
+        }
+        
+        if (checkOverlap(player, goal4)){
+            reachedGoal(player, goal4);
+        }
+        
+        if (checkOverlap(player, goal5)){
+            reachedGoal(player, goal5);
+        }
+        
+        //Collision Detection 
+        /*
         if (playerAlive) {
             game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
             game.physics.arcade.collide(player, goal1, reachedGoal, null, this);
@@ -490,10 +516,20 @@ window.onload = function() {
             game.physics.arcade.collide(player, goal3, reachedGoal, null, this);
             game.physics.arcade.collide(player, goal4, reachedGoal, null, this);
             game.physics.arcade.collide(player, goal5, reachedGoal, null, this);
-
+        
         } else {
 
-            }
+            }*/
+
+    }
+    
+    //Overlap Detection
+    function checkOverlap(spriteA, spriteB) {
+
+        var boundsA = spriteA.getBounds();
+        var boundsB = spriteB.getBounds();
+
+        return Phaser.Rectangle.intersects(boundsA, boundsB);
 
     }
 
