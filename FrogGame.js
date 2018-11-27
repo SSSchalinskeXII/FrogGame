@@ -217,29 +217,7 @@ window.onload = function() {
             break;
 
         }
-        
-        //Collision Detection
-        if (playerAlive) {
-            game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
-        } else {
-            //Respawn Player
-            if(game.time.now > deathTime + 1000){
-                respawnPlayer();
-            }
-        }
-        console.log(playerAlive);
-        
-        if (obstacle.inCamera) {
-        
-            obstacle.body.velocity.x = obstacleSpeed;
-        
-        } else if (!obstacle.inCamera) {
-            
-            obstacle.destroy();
-            console.log("Boom");
-            spawnObstacle(1, 350, 1, 'img_nick');
-            
-        }
+    
         
         
     }
