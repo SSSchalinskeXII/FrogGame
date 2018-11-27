@@ -501,8 +501,20 @@ window.onload = function() {
 
         obstacle.body.velocity.x = obstacleSpeed;
 
-    }
 
+        if (obstacle.inCamera) { 
+         
+            obstacle.body.velocity.x = obstacleSpeed; 
+         
+        } else if (!obstacle.inCamera) { 
+             
+            obstacle.destroy(); 
+            console.log("Boom"); 
+            spawnObstacle(1, 350, 1, 'img_nick'); 
+             
+        } 
+
+    }
 
     function gameplay() {
 
