@@ -217,7 +217,7 @@ window.onload = function() {
             break;
 
         }
-
+        
     }
 
     function render() {
