@@ -652,7 +652,7 @@ window.onload = function() {
 
         if (frogsSaved == 5) {
 
-            globalGameState = beatTheGame();
+            globalGameState = "beatTheGame";
 
         }
 
@@ -663,7 +663,10 @@ window.onload = function() {
         if (goalObject.takenCareOf == false) {
             console.log("You Saved a Frog!");
             frogsSaved++;
-            changeCurrentScore('add',500);
+            countdownTimer.removeAll();
+            setTimer(countdownTimer, countdownTimerDuration);  
+            changeCurrentScore('add', timeleft_seconds.toFixed(0) * 50);
+
             player.reset(350,428);
             goalObject.alpha = 1.0;
             goalObject.takenCareOf = true;
