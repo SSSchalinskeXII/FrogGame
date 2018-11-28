@@ -168,7 +168,7 @@ window.onload = function() {
         snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
-        spawnObstacle(1, 350, 1, 'img_nick');
+        spawnObstacle(1, 365, 'img_nick'); //ROAD: 365, 300, 270  SIDEWALK: 235
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -365,17 +365,12 @@ window.onload = function() {
 
 
     
-    function spawnObstacle(x, y, max, sprite) {
+    function spawnObstacle(x, y, sprite) {
         
         // console.log("Hello"); // - For Testing
-        
-        for (var i =0; i < max; i++) {
             
-            // console.log(i); // - For Testing
-            obstacle = game.add.sprite(x, y, sprite);
-            game.physics.arcade.enable(obstacle);
-            
-        }
+        obstacle = game.add.sprite(x, y, sprite);
+        game.physics.arcade.enable(obstacle);
         
     }
     
@@ -532,6 +527,15 @@ window.onload = function() {
         return Phaser.Rectangle.intersects(boundsA, boundsB);
 
     }
+       
+    function spawnRate() {
+        
+        min = Math.ceil(0);
+        max = Math.floor(100);
+        console.log("SR");
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+        
+    }
 
     function obstacleMovement() {
 
@@ -546,7 +550,7 @@ window.onload = function() {
              
             obstacle.destroy(); 
             console.log("Boom"); 
-            spawnObstacle(1, 350, 1, 'img_nick'); 
+            //spawnObstacle(1, 350, 1, 'img_nick'); 
              
         } 
 
@@ -557,6 +561,40 @@ window.onload = function() {
         frogMovement();
         frogCollisionDetection();
         obstacleMovement();
+        
+        var spawn = spawnRate();
+        
+        //ROAD: 365, 300, 270  SIDEWALK: 235
+        
+        if (spawn == 1) {
+            
+            spawnObstacle(1, 365, 'img_nick');
+            
+        }
+        
+        if (spawn == 2) {
+            
+            spawnObstacle(1, 332, 'img_nick'); 
+            
+        }
+        
+        if (spawn == 3) {
+            
+            spawnObstacle(1, 300, 'img_nick');
+            
+        }
+        
+        if (spawn == 4) {
+            
+            spawnObstacle(1, 270, 'img_nick');
+            
+        }
+        
+        if (spawn == 5) {
+            
+            spawnObstacle(1, 235, 'img_nick');
+            
+        }
 
         if (game.time.now > DynamicPromptTimeOfInitialDisplay + 5000 && txt_DynamicPromptMessage != ""){
 
