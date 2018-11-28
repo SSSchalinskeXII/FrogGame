@@ -190,7 +190,7 @@ window.onload = function() {
 
             case "gameplay":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 gameplay();
 
             break;
@@ -198,28 +198,28 @@ window.onload = function() {
 
             case "reachedGoal":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 reachedGoal();
 
             break;
 
             case "death":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 death();
 
             break;
 
             case "gameOver":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 gameOver();
 
             break;
 
             case "beatTheGame":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 beatTheGame();
 
             break;
@@ -559,7 +559,7 @@ window.onload = function() {
         
         min = Math.ceil(0);
         max = Math.floor(300);
-        console.log("SR");
+        //console.log("SR");
         return Math.floor(Math.random() * (max - min + 1)) + min;
         
     }
@@ -665,6 +665,7 @@ window.onload = function() {
             frogsSaved++;
             countdownTimer.removeAll();
             setTimer(countdownTimer, countdownTimerDuration);  
+            console.log(timeleft_seconds.toFixed(0) + " when saved");
             changeCurrentScore('add', timeleft_seconds.toFixed(0) * 50);
 
             player.reset(350,428);
