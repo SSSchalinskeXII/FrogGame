@@ -51,6 +51,8 @@ window.onload = function() {
         
         // LOADING ALL IMAGES
         
+        game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
+        
         //Frog Sprites
         game.load.image('frogUp', 'frog_Sprite/frogBase.png');
         game.load.image('frogLeft', 'frog_Sprite/frog_Left.png');
@@ -86,7 +88,7 @@ window.onload = function() {
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
 
-        player = game.add.sprite(350,428, 'frogUp');
+        player = game.add.sprite(350,395, 'frogUp');
         player.frame = 0;
 
 
@@ -180,7 +182,12 @@ window.onload = function() {
         snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
-        spawnObstacle(1, 350, 1, 'redCar');
+        obstacleGroup = game.add.group();
+        
+        spawnObstacle(1, 365, 'redCar', 'left'); //ROAD: 365, 300, 270, SIDEWALK: 235
+        
+        obstacleGroup.enableBody = true;
+        obstacleGroup.physics = Phaser.Physics.ARCADE;
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -411,7 +418,7 @@ window.onload = function() {
     
     function respawnPlayer() {
         globalGameState="gameplay";
-        player.reset(350,428);
+        player.reset(350,395);
         playerAlive = true;
         countdownTimer.removeAll();
         setTimer(countdownTimer, countdownTimerDuration);   
@@ -617,7 +624,7 @@ window.onload = function() {
         
         if (spawn == 1) {
             
-            spawnObstacle(1, 365, 'img_nick', 'left');
+            spawnObstacle(1, 365, 'redCar', 'left');
             
         }
         
@@ -669,7 +676,7 @@ window.onload = function() {
             console.log(timeleft_seconds.toFixed(0) + " when saved");
             changeCurrentScore('add', timeleft_seconds.toFixed(0) * 50);
 
-            player.reset(350,428);
+            player.reset(350,395);
             goalObject.alpha = 1.0;
             goalObject.takenCareOf = true;
             DynamicPromptTimeOfInitialDisplay = game.time.now;
@@ -684,7 +691,7 @@ window.onload = function() {
             changeCurrentScore('subtract',100);
             DynamicPromptTimeOfInitialDisplay = game.time.now;
             txt_DynamicPromptMessage = "Your Frog is\nin Another Castle";
-            player.reset(350,428);
+            player.reset(350,395);
         }
 
     }
