@@ -14,7 +14,7 @@ window.onload = function() {
     var yjumpDistance = 1975;
     var xjumpDistance = 1500;
     
-    var obstacle;
+    var obstacleGroup;
     var obstacleSpeed = 50;
 
     var txt_SecondsLeft;
@@ -42,6 +42,7 @@ window.onload = function() {
 
 
     var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+    var input_EnterKey;
 
     function preload () {
 
@@ -69,6 +70,8 @@ window.onload = function() {
     }
 
     function create () {
+        
+        game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // 
         // Initial Game State
@@ -191,7 +194,7 @@ window.onload = function() {
 
             case "gameplay":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 gameplay();
 
             break;
@@ -199,57 +202,34 @@ window.onload = function() {
 
             case "reachedGoal":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 reachedGoal();
 
             break;
 
             case "death":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 death();
 
             break;
 
             case "gameOver":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 gameOver();
 
             break;
 
             case "beatTheGame":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 beatTheGame();
 
             break;
 
         }
-        
-        //Collision Detection
-        if (playerAlive) {
-            game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
-        } else {
-            //Respawn Player
-            if(game.time.now > deathTime + 1000){
-                respawnPlayer();
-            }
-        }
-        console.log(playerAlive);
-        
-        if (obstacle.inCamera) {
-        
-            obstacle.body.velocity.x = obstacleSpeed;
-        
-        } else if (!obstacle.inCamera) {
-            
-            obstacle.destroy();
-            console.log("Boom");
-            spawnObstacle(1, 350, 1, 'img_nick');
-            
-        }
-        
+    
         
     }
 
@@ -398,15 +378,20 @@ window.onload = function() {
 
 
     
-    function spawnObstacle(x, y, max, sprite) {
+    function spawnObstacle(x, y, sprite, direction) {
         
         // console.log("Hello"); // - For Testing
-        
-        for (var i =0; i < max; i++) {
             
-            // console.log(i); // - For Testing
-            obstacle = game.add.sprite(x, y, sprite);
-            game.physics.arcade.enable(obstacle);
+        var obstacle = obstacleGroup.create(x, y, sprite);
+        game.physics.arcade.enable(obstacle);
+        
+        if (direction == 'left') {
+            
+            obstacleMovementLeft(obstacle);
+            
+        } else if (direction == 'right') {
+            
+            obstacleMovementRight(obstacle);
             
         }
         
@@ -512,7 +497,41 @@ window.onload = function() {
 
     function frogCollisionDetection() {
 
-        //Collision Detection
+        //Revamped Collision detection
+        
+        for (var i = 0; i < obstacleGroup.countLiving(); i++) {
+            
+            if (checkOverlap(player, obstacleGroup.children[i])){
+                
+                frogDeath(player);
+                
+            }    
+            
+        }
+        
+        
+        if (checkOverlap(player, goal1)){
+            reachedGoal(player, goal1);
+        }
+        
+        if (checkOverlap(player, goal2)){
+            reachedGoal(player, goal2);
+        }
+        
+        if (checkOverlap(player, goal3)){
+            reachedGoal(player, goal3);
+        }
+        
+        if (checkOverlap(player, goal4)){
+            reachedGoal(player, goal4);
+        }
+        
+        if (checkOverlap(player, goal5)){
+            reachedGoal(player, goal5);
+        }
+        
+        //Collision Detection 
+        /*
         if (playerAlive) {
             game.physics.arcade.collide(player, obstacle, frogDeath, null, this);
             game.physics.arcade.collide(player, goal1, reachedGoal, null, this);
@@ -520,16 +539,68 @@ window.onload = function() {
             game.physics.arcade.collide(player, goal3, reachedGoal, null, this);
             game.physics.arcade.collide(player, goal4, reachedGoal, null, this);
             game.physics.arcade.collide(player, goal5, reachedGoal, null, this);
-
+        
         } else {
 
-            }
+            }*/
 
     }
+    
+    //Overlap Detection
+    function checkOverlap(spriteA, spriteB) {
 
-    function obstacleMovement() {
+        var boundsA = spriteA.getBounds();
+        var boundsB = spriteB.getBounds();
+
+        return Phaser.Rectangle.intersects(boundsA, boundsB);
+
+    }
+       
+    function spawnRate() {
+        
+        min = Math.ceil(0);
+        max = Math.floor(300);
+        //console.log("SR");
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+        
+    }
+    
+    /*function obstacleMovement() {
 
         obstacle.body.velocity.x = obstacleSpeed;
+
+
+        if (!obstacle.inCamera) { 
+             
+            obstacle.destroy(); 
+             
+        } 
+
+    }*/
+
+
+    function obstacleMovementLeft(obstacle) {
+
+        obstacle.body.velocity.x = obstacleSpeed;
+
+
+        if (!obstacle.inCamera) { 
+             
+            obstacle.destroy(); 
+             
+        } 
+
+    }
+    
+    function obstacleMovementRight(obstacle) {
+
+        obstacle.body.velocity.x = -obstacleSpeed;
+        
+        if (!obstacle.inCamera) { 
+             
+            obstacle.destroy(); 
+
+        } 
 
     }
 
@@ -538,7 +609,41 @@ window.onload = function() {
 
         frogMovement();
         frogCollisionDetection();
-        obstacleMovement();
+        //obstacleMovement();
+        
+        var spawn = spawnRate();
+        
+        //ROAD: 365, 300, 270  SIDEWALK: 235
+        
+        if (spawn == 1) {
+            
+            spawnObstacle(1, 365, 'img_nick', 'left');
+            
+        }
+        
+        if (spawn == 2) {
+            
+            spawnObstacle(720, 332, 'img_nick', 'right');
+            
+        }
+        
+        if (spawn == 3) {
+            
+            spawnObstacle(1, 300, 'img_nick', 'left');
+            
+        }
+        
+        if (spawn == 4) {
+            
+            spawnObstacle(720, 270, 'img_nick', 'right');
+                        
+        }
+        
+        if (spawn == 5) {
+            
+            spawnObstacle(1, 235, 'img_nick', 'left');
+            
+        }
 
         if (game.time.now > DynamicPromptTimeOfInitialDisplay + 5000 && txt_DynamicPromptMessage != ""){
 
@@ -548,7 +653,7 @@ window.onload = function() {
 
         if (frogsSaved == 5) {
 
-            globalGameState = beatTheGame();
+            globalGameState = "beatTheGame";
 
         }
 
@@ -559,7 +664,11 @@ window.onload = function() {
         if (goalObject.takenCareOf == false) {
             console.log("You Saved a Frog!");
             frogsSaved++;
-            changeCurrentScore('add',500);
+            countdownTimer.removeAll();
+            setTimer(countdownTimer, countdownTimerDuration);  
+            console.log(timeleft_seconds.toFixed(0) + " when saved");
+            changeCurrentScore('add', timeleft_seconds.toFixed(0) * 50);
+
             player.reset(350,428);
             goalObject.alpha = 1.0;
             goalObject.takenCareOf = true;
