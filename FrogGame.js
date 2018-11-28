@@ -536,31 +536,52 @@ window.onload = function() {
         return Math.floor(Math.random() * (max - min + 1)) + min;
         
     }
-
+    
     function obstacleMovement() {
 
         obstacle.body.velocity.x = obstacleSpeed;
 
 
-        if (obstacle.inCamera) { 
-         
-            obstacle.body.velocity.x = obstacleSpeed; 
-         
-        } else if (!obstacle.inCamera) { 
+        if (!obstacle.inCamera) { 
              
             obstacle.destroy(); 
-            console.log("Boom"); 
-            //spawnObstacle(1, 350, 1, 'img_nick'); 
              
         } 
 
     }
 
+
+    function obstacleMovementLeft() {
+
+        obstacle.body.velocity.x = obstacleSpeed;
+
+
+        if (!obstacle.inCamera) { 
+             
+            obstacle.destroy(); 
+             
+        } 
+
+    }
+    
+    function obstacleMovementRight() {
+
+        obstacle.body.velocity.x = -obstacleSpeed;
+        
+        if (!obstacle.inCamera) { 
+             
+            obstacle.destroy(); 
+
+        } 
+
+    }
+
+
     function gameplay() {
 
         frogMovement();
         frogCollisionDetection();
-        obstacleMovement();
+        //obstacleMovement();
         
         var spawn = spawnRate();
         
@@ -569,30 +590,35 @@ window.onload = function() {
         if (spawn == 1) {
             
             spawnObstacle(1, 365, 'img_nick');
+            obstacleMovementLeft();
             
         }
         
         if (spawn == 2) {
             
-            spawnObstacle(1, 332, 'img_nick'); 
+            spawnObstacle(720, 332, 'img_nick');
+            obstacleMovementRight();
             
         }
         
         if (spawn == 3) {
             
             spawnObstacle(1, 300, 'img_nick');
+            obstacleMovementLeft();
             
         }
         
         if (spawn == 4) {
             
-            spawnObstacle(1, 270, 'img_nick');
+            spawnObstacle(720, 270, 'img_nick');
+            obstacleMovementRight();
             
         }
         
         if (spawn == 5) {
             
             spawnObstacle(1, 235, 'img_nick');
+            obstacleMovementLeft();
             
         }
 
