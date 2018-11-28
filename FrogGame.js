@@ -14,7 +14,7 @@ window.onload = function() {
     var yjumpDistance = 1975;
     var xjumpDistance = 1500;
     
-    var obstacle;
+    var obstacleGroup;
     var obstacleSpeed = 50;
 
     var txt_SecondsLeft;
@@ -55,6 +55,8 @@ window.onload = function() {
     }
 
     function create () {
+        
+        game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // 
         // Initial Game State
@@ -168,7 +170,12 @@ window.onload = function() {
         snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
-        spawnObstacle(1, 365, 'img_nick'); //ROAD: 365, 300, 270  SIDEWALK: 235
+        obstacleGroup = game.add.group();
+        
+        spawnObstacle(1, 365, 'img_nick', 'left'); //ROAD: 365, 300, 270  SIDEWALK: 235
+        
+        this.obstacleGroup.enableBody = true;
+        this.obstacleGroup.physics = Phaser.Physics.ARCADE;
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -365,12 +372,22 @@ window.onload = function() {
 
 
     
-    function spawnObstacle(x, y, sprite) {
+    function spawnObstacle(x, y, sprite, direction) {
         
         // console.log("Hello"); // - For Testing
             
-        obstacle = game.add.sprite(x, y, sprite);
+        var obstacle = obstacleGroup.create(x, y, sprite);
         game.physics.arcade.enable(obstacle);
+        
+        if (direction == 'left') {
+            
+            obstacleMovementLeft(obstacle);
+            
+        } else if (direction == 'right') {
+            
+            obstacleMovementRight(obstacle);
+            
+        }
         
     }
     
@@ -478,9 +495,17 @@ window.onload = function() {
     function frogCollisionDetection() {
 
         //Revamped Collision detection
-        if (checkOverlap(player, obstacle)){
-            frogDeath(player);
+        
+        for (var i = 0; i < obstacleGroup.countLiving(); i++) {
+            
+            if (checkOverlap(player, obstacleGroup.children[i])){
+                
+                frogDeath(player);
+                
+            }    
+            
         }
+        
         
         if (checkOverlap(player, goal1)){
             reachedGoal(player, goal1);
@@ -531,13 +556,13 @@ window.onload = function() {
     function spawnRate() {
         
         min = Math.ceil(0);
-        max = Math.floor(100);
+        max = Math.floor(300);
         console.log("SR");
         return Math.floor(Math.random() * (max - min + 1)) + min;
         
     }
     
-    function obstacleMovement() {
+    /*function obstacleMovement() {
 
         obstacle.body.velocity.x = obstacleSpeed;
 
@@ -548,10 +573,10 @@ window.onload = function() {
              
         } 
 
-    }
+    }*/
 
 
-    function obstacleMovementLeft() {
+    function obstacleMovementLeft(obstacle) {
 
         obstacle.body.velocity.x = obstacleSpeed;
 
@@ -564,7 +589,7 @@ window.onload = function() {
 
     }
     
-    function obstacleMovementRight() {
+    function obstacleMovementRight(obstacle) {
 
         obstacle.body.velocity.x = -obstacleSpeed;
         
@@ -589,36 +614,31 @@ window.onload = function() {
         
         if (spawn == 1) {
             
-            spawnObstacle(1, 365, 'img_nick');
-            obstacleMovementLeft();
+            spawnObstacle(1, 365, 'img_nick', 'left');
             
         }
         
         if (spawn == 2) {
             
-            spawnObstacle(720, 332, 'img_nick');
-            obstacleMovementRight();
+            spawnObstacle(720, 332, 'img_nick', 'right');
             
         }
         
         if (spawn == 3) {
             
-            spawnObstacle(1, 300, 'img_nick');
-            obstacleMovementLeft();
+            spawnObstacle(1, 300, 'img_nick', 'left');
             
         }
         
         if (spawn == 4) {
             
-            spawnObstacle(720, 270, 'img_nick');
-            obstacleMovementRight();
-            
+            spawnObstacle(720, 270, 'img_nick', 'right');
+                        
         }
         
         if (spawn == 5) {
             
-            spawnObstacle(1, 235, 'img_nick');
-            obstacleMovementLeft();
+            spawnObstacle(1, 235, 'img_nick', 'left');
             
         }
 
