@@ -42,15 +42,30 @@ window.onload = function() {
 
 
     var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+    var input_EnterKey;
 
     function preload () {
 
-        game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
-        game.load.image('img_frogsprite', 'frog_Sprite/frogBase.png');
         game.load.image('img_nick', 'nick.png');
-        game.load.image('img_goal', 'nick.png');
         game.load.audio('snd_jump','frogjump.wav');
-        game.load.spritesheet('frogJump', 'frog_Sprite/frogJumpSprite.png', 32, 32, 2);
+        
+        // LOADING ALL IMAGES
+        
+        //Frog Sprites
+        game.load.image('frogUp', 'frog_Sprite/frogBase.png');
+        game.load.image('frogLeft', 'frog_Sprite/frog_Left.png');
+        game.load.image('frogDown', 'frog_Sprite/frog_Down.png');
+        game.load.image('frogRight', 'frog_Sprite/frog_Right.png');
+        game.load.image('frogDead', 'frog_Sprite/deadFrog.png');
+        
+        //Obstacles
+        game.load.image('redCar', 'Obstacles/small_Car.png');
+        game.load.image('purpleCar', 'Obstacles/car.png');
+        game.load.image('semi', 'Obstacles/semi.png');
+        game.load.image('bike', 'Obstacles/bike.png');
+        game.load.image('goal', 'Obstacles/goal.png');
+        game.load.image('log', 'Obstacles/log.png');
+        
 
     }
 
@@ -71,45 +86,40 @@ window.onload = function() {
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
 
-        player = game.add.sprite(350,428, 'img_frogsprite');
+        player = game.add.sprite(350,428, 'frogUp');
         player.frame = 0;
 
-        player.anchor.set(0.5);
-        player.pivot.x = (16);
-        player.pivot.y = (16);
 
-        goal1 = game.add.sprite(64,4, 'img_goal');
+        goal1 = game.add.sprite(64,4, 'goal');
         goal1.alpha = 0.2;
         goal1.takenCareOf = false;
 
         game.physics.arcade.enable(goal1);
 
-        goal2 = game.add.sprite(192,4, 'img_goal');
+        goal2 = game.add.sprite(192,4, 'goal');
         goal2.alpha = 0.2;
         goal2.takenCareOf = false;
 
         game.physics.arcade.enable(goal2);
 
-        goal3 = game.add.sprite(352,4, 'img_goal');
+        goal3 = game.add.sprite(352,4, 'goal');
         goal3.alpha = 0.2;
         goal3.takenCareOf = false;
 
         game.physics.arcade.enable(goal3);
 
-        goal4 = game.add.sprite(480,4, 'img_goal');
+        goal4 = game.add.sprite(480,4, 'goal');
         goal4.alpha = 0.2;
         goal4.takenCareOf = false;
 
         game.physics.arcade.enable(goal4);
 
-        goal5 = game.add.sprite(608,4, 'img_goal');
+        goal5 = game.add.sprite(608,4, 'goal');
         goal5.alpha = 0.2;
         goal5.takenCareOf = false;
 
         game.physics.arcade.enable(goal5);
 
-        // Animating the Sprites
-        player.animations.add('jump', [0, 1], 2, 2);
 
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
@@ -170,12 +180,7 @@ window.onload = function() {
         snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
-        obstacleGroup = game.add.group();
-        
-        spawnObstacle(1, 365, 'img_nick', 'left'); //ROAD: 365, 300, 270  SIDEWALK: 235
-        
-        this.obstacleGroup.enableBody = true;
-        this.obstacleGroup.physics = Phaser.Physics.ARCADE;
+        spawnObstacle(1, 350, 1, 'redCar');
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -189,7 +194,7 @@ window.onload = function() {
 
             case "gameplay":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 gameplay();
 
             break;
@@ -197,33 +202,34 @@ window.onload = function() {
 
             case "reachedGoal":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 reachedGoal();
 
             break;
 
             case "death":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 death();
 
             break;
 
             case "gameOver":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 gameOver();
 
             break;
 
             case "beatTheGame":
 
-                console.log('Gamestate Changed To: ' + globalGameState);
+                //console.log('Gamestate Changed To: ' + globalGameState);
                 beatTheGame();
 
             break;
 
         }
+    
         
     }
 
@@ -393,6 +399,7 @@ window.onload = function() {
     
     
     function frogDeath(frog) {
+        
         countdownTimer.removeAll();
         console.log("frogdeath called at: " + game.time.now);
         deathTime = game.time.now;
@@ -454,8 +461,7 @@ window.onload = function() {
             while(canMove){
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
-                player.animations.play('jump');
-                //player.angle = 0;
+
 
             }
         } else if (cursors.down.isDown){
@@ -464,8 +470,7 @@ window.onload = function() {
                 
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
-                player.animations.play('jump');
-                //player.angle = 180;
+
                 
             }
         } else if (cursors.right.isDown){
@@ -473,8 +478,7 @@ window.onload = function() {
             while(canMove){
                 player.body.velocity.x = xjumpDistance;
                 canMove = false;
-                player.animations.play('jump');
-                //player.angle = 90;
+
 
             }
         } else if (cursors.left.isDown){
@@ -482,8 +486,7 @@ window.onload = function() {
             while(canMove){
                 player.body.velocity.x = -xjumpDistance;
                 canMove = false;
-                player.animations.play('jump');
-                //player.angle = 270;
+
 
             }
         } else {
@@ -557,7 +560,7 @@ window.onload = function() {
         
         min = Math.ceil(0);
         max = Math.floor(300);
-        console.log("SR");
+        //console.log("SR");
         return Math.floor(Math.random() * (max - min + 1)) + min;
         
     }
@@ -650,7 +653,7 @@ window.onload = function() {
 
         if (frogsSaved == 5) {
 
-            globalGameState = beatTheGame();
+            globalGameState = "beatTheGame";
 
         }
 
@@ -661,7 +664,11 @@ window.onload = function() {
         if (goalObject.takenCareOf == false) {
             console.log("You Saved a Frog!");
             frogsSaved++;
-            changeCurrentScore('add',500);
+            countdownTimer.removeAll();
+            setTimer(countdownTimer, countdownTimerDuration);  
+            console.log(timeleft_seconds.toFixed(0) + " when saved");
+            changeCurrentScore('add', timeleft_seconds.toFixed(0) * 50);
+
             player.reset(350,428);
             goalObject.alpha = 1.0;
             goalObject.takenCareOf = true;
