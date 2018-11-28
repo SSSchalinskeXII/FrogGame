@@ -42,6 +42,7 @@ window.onload = function() {
 
 
     var game = new Phaser.Game(720, 462, Phaser.AUTO, 'game',  { preload: preload, create: create, render: render, update: update });
+    var input_EnterKey;
 
     function preload () {
 
@@ -174,8 +175,8 @@ window.onload = function() {
         
         spawnObstacle(1, 365, 'img_nick', 'left'); //ROAD: 365, 300, 270  SIDEWALK: 235
         
-        this.obstacleGroup.enableBody = true;
-        this.obstacleGroup.physics = Phaser.Physics.ARCADE;
+        obstacleGroup.enableBody = true;
+        obstacleGroup.physics = Phaser.Physics.ARCADE;
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
