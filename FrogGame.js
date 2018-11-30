@@ -51,7 +51,26 @@ window.onload = function() {
         game.load.image('img_nick', 'nick.png');
         game.load.image('img_goal', 'nick.png');
         game.load.audio('snd_jump','frogjump.wav');
-        game.load.spritesheet('frogJump', 'frog_Sprite/frogJumpSprite.png', 32, 32, 2);
+        
+        // LOADING ALL IMAGES
+        
+        game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
+        
+        //Frog Sprites
+        game.load.image('frogUp', 'frog_Sprite/frogBase.png');
+        game.load.image('frogLeft', 'frog_Sprite/frog_Left.png');
+        game.load.image('frogDown', 'frog_Sprite/frog_Down.png');
+        game.load.image('frogRight', 'frog_Sprite/frog_Right.png');
+        game.load.image('frogDead', 'frog_Sprite/deadFrog.png');
+        
+        //Obstacles
+        game.load.image('redCar', 'Obstacles/small_Car.png');
+        game.load.image('purpleCar', 'Obstacles/car.png');
+        game.load.image('semi', 'Obstacles/semi.png');
+        game.load.image('bike', 'Obstacles/bike.png');
+        game.load.image('goal', 'Obstacles/goal.png');
+        game.load.image('log', 'Obstacles/log.png');
+        
 
     }
 
@@ -72,38 +91,38 @@ window.onload = function() {
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
 
-        player = game.add.sprite(350,428, 'img_frogsprite');
+        player = game.add.sprite(350,395, 'frogUp');
         player.frame = 0;
 
         player.anchor.set(0.5);
         player.pivot.x = (16);
         player.pivot.y = (16);
 
-        goal1 = game.add.sprite(64,4, 'img_goal');
+        goal1 = game.add.sprite(64,0, 'goal');
         goal1.alpha = 0.2;
         goal1.takenCareOf = false;
 
         game.physics.arcade.enable(goal1);
 
-        goal2 = game.add.sprite(192,4, 'img_goal');
+        goal2 = game.add.sprite(192,0, 'goal');
         goal2.alpha = 0.2;
         goal2.takenCareOf = false;
 
         game.physics.arcade.enable(goal2);
 
-        goal3 = game.add.sprite(352,4, 'img_goal');
+        goal3 = game.add.sprite(352,0, 'goal');
         goal3.alpha = 0.2;
         goal3.takenCareOf = false;
 
         game.physics.arcade.enable(goal3);
 
-        goal4 = game.add.sprite(480,4, 'img_goal');
+        goal4 = game.add.sprite(480,0, 'goal');
         goal4.alpha = 0.2;
         goal4.takenCareOf = false;
 
         game.physics.arcade.enable(goal4);
 
-        goal5 = game.add.sprite(608,4, 'img_goal');
+        goal5 = game.add.sprite(608,0, 'goal');
         goal5.alpha = 0.2;
         goal5.takenCareOf = false;
 
@@ -173,7 +192,7 @@ window.onload = function() {
         
         obstacleGroup = game.add.group();
         
-        spawnObstacle(1, 365, 'img_nick', 'left'); //ROAD: 365, 300, 270  SIDEWALK: 235
+        spawnObstacle(1, 365, 'redCar', 'left'); //ROAD: 365, 300, 270, SIDEWALK: 235
         
         obstacleGroup.enableBody = true;
         obstacleGroup.physics = Phaser.Physics.ARCADE;
@@ -225,6 +244,8 @@ window.onload = function() {
             break;
 
         }
+        
+        player.bringToTop();
     
         
     }
@@ -406,7 +427,7 @@ window.onload = function() {
     
     function respawnPlayer() {
         globalGameState="gameplay";
-        player.reset(350,428);
+        player.reset(350,395);
         playerAlive = true;
         countdownTimer.removeAll();
         setTimer(countdownTimer, countdownTimerDuration);   
@@ -616,7 +637,7 @@ window.onload = function() {
         
         if (spawn == 1) {
             
-            spawnObstacle(1, 365, 'img_nick', 'left');
+            spawnObstacle(1, 365, 'redCar', 'left');
             
         }
         
@@ -668,7 +689,7 @@ window.onload = function() {
             console.log(timeleft_seconds.toFixed(0) + " when saved");
             changeCurrentScore('add', timeleft_seconds.toFixed(0) * 50);
 
-            player.reset(350,428);
+            player.reset(350,395);
             goalObject.alpha = 1.0;
             goalObject.takenCareOf = true;
             DynamicPromptTimeOfInitialDisplay = game.time.now;
@@ -683,7 +704,7 @@ window.onload = function() {
             changeCurrentScore('subtract',100);
             DynamicPromptTimeOfInitialDisplay = game.time.now;
             txt_DynamicPromptMessage = "Your Frog is\nin Another Castle";
-            player.reset(350,428);
+            player.reset(350,395);
         }
 
     }
