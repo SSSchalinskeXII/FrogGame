@@ -236,6 +236,8 @@ window.onload = function() {
             break;
 
         }
+        
+        player.bringToTop();
     
         
     }
