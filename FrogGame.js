@@ -92,31 +92,31 @@ window.onload = function() {
         player.frame = 0;
 
 
-        goal1 = game.add.sprite(64,4, 'goal');
+        goal1 = game.add.sprite(64,0, 'goal');
         goal1.alpha = 0.2;
         goal1.takenCareOf = false;
 
         game.physics.arcade.enable(goal1);
 
-        goal2 = game.add.sprite(192,4, 'goal');
+        goal2 = game.add.sprite(192,0, 'goal');
         goal2.alpha = 0.2;
         goal2.takenCareOf = false;
 
         game.physics.arcade.enable(goal2);
 
-        goal3 = game.add.sprite(352,4, 'goal');
+        goal3 = game.add.sprite(352,0, 'goal');
         goal3.alpha = 0.2;
         goal3.takenCareOf = false;
 
         game.physics.arcade.enable(goal3);
 
-        goal4 = game.add.sprite(480,4, 'goal');
+        goal4 = game.add.sprite(480,0, 'goal');
         goal4.alpha = 0.2;
         goal4.takenCareOf = false;
 
         game.physics.arcade.enable(goal4);
 
-        goal5 = game.add.sprite(608,4, 'goal');
+        goal5 = game.add.sprite(608,0, 'goal');
         goal5.alpha = 0.2;
         goal5.takenCareOf = false;
 
