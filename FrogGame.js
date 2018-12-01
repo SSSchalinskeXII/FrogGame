@@ -1,5 +1,8 @@
 window.onload = function() {
+    bootStrap();
+}
 
+function bootStrap() {
     var globalGameState;
     var countdownTimer;
     var countdownTimerDuration;
