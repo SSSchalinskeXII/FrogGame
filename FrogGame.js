@@ -38,6 +38,8 @@ window.onload = function() {
     var goal4;
     var goal5;
 
+    var barrier;
+
     var frogsSaved = 0;
 
 
@@ -67,6 +69,7 @@ window.onload = function() {
         game.load.image('bike', 'Obstacles/bike.png');
         game.load.image('goal', 'frog_Sprite/savedFrog.png');
         game.load.image('log', 'Obstacles/log.png');
+        game.load.image('barrier', 'Obstacles/barrier-row.png');
         
 
     }
@@ -90,6 +93,12 @@ window.onload = function() {
 
         player = game.add.sprite(350,395, 'frogUp');
         player.frame = 0;
+
+        barrier = game.add.sprite(0,429, 'barrier');
+        game.physics.arcade.enable(barrier);
+        barrier.alpha = 0;
+
+
 
 
         goal1 = game.add.sprite(64,0, 'goal');
@@ -519,6 +528,10 @@ window.onload = function() {
         }
         
         
+        if (checkOverlap(player, barrier)){
+            player.y = player.y - 33;
+        }
+
         if (checkOverlap(player, goal1)){
             reachedGoal(player, goal1);
         }
@@ -615,6 +628,7 @@ window.onload = function() {
 
 
     function gameplay() {
+
 
         frogMovement();
         frogCollisionDetection();
