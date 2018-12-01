@@ -247,6 +247,7 @@ window.onload = function() {
         }
         
         player.bringToTop();
+        //player.z = 0;
     
         
     }
@@ -254,13 +255,14 @@ window.onload = function() {
     function render() {
 
 
-        game.debug.text("Current Game State: " + globalGameState, 32, 32);
+        //game.debug.text("Current Game State: " + globalGameState, 32, 32);
 
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
         //dynamicPrompt();
         txt_DynamicPrompt.text = txt_DynamicPromptMessage;
+        txt_DynamicPrompt.bringToTop();
 
     }
 
@@ -402,6 +404,8 @@ window.onload = function() {
             
         var obstacle = obstacleGroup.create(x, y, sprite);
         game.physics.arcade.enable(obstacle);
+        obstacle.z = 6;
+
         
         if (direction == 'left') {
             
