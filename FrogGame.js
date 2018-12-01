@@ -65,7 +65,7 @@ window.onload = function() {
         game.load.image('purpleCar', 'Obstacles/car.png');
         game.load.image('semi', 'Obstacles/semi.png');
         game.load.image('bike', 'Obstacles/bike.png');
-        game.load.image('goal', 'Obstacles/goal.png');
+        game.load.image('goal', 'frog_Sprite/savedFrog.png');
         game.load.image('log', 'Obstacles/log.png');
         
 
@@ -93,31 +93,31 @@ window.onload = function() {
 
 
         goal1 = game.add.sprite(64,0, 'goal');
-        goal1.alpha = 0.2;
+        goal1.alpha = 0;
         goal1.takenCareOf = false;
 
         game.physics.arcade.enable(goal1);
 
         goal2 = game.add.sprite(192,0, 'goal');
-        goal2.alpha = 0.2;
+        goal2.alpha = 0;
         goal2.takenCareOf = false;
 
         game.physics.arcade.enable(goal2);
 
         goal3 = game.add.sprite(352,0, 'goal');
-        goal3.alpha = 0.2;
+        goal3.alpha = 0;
         goal3.takenCareOf = false;
 
         game.physics.arcade.enable(goal3);
 
         goal4 = game.add.sprite(480,0, 'goal');
-        goal4.alpha = 0.2;
+        goal4.alpha = 0;
         goal4.takenCareOf = false;
 
         game.physics.arcade.enable(goal4);
 
         goal5 = game.add.sprite(608,0, 'goal');
-        goal5.alpha = 0.2;
+        goal5.alpha = 0;
         goal5.takenCareOf = false;
 
         game.physics.arcade.enable(goal5);
@@ -434,7 +434,7 @@ window.onload = function() {
             txt_DynamicPromptMessage = "";
             setTimer(countdownTimer, countdownTimerDuration);
             setNumberOfLives(5);
-            goal1.alpha = 0.2;
+            goal1.alpha = 0;
             goal1.takenCareOf = false;
             console.log('department of the interior:' + globalGameState);
             respawnPlayer();
