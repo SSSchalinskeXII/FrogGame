@@ -15,7 +15,8 @@ function bootStrap() {
     var canMove = true;
     var playerAlive = true;
     var yjumpDistance = 1975;
-    var xjumpDistance = 1500;
+    var xjumpDistance = 750; //old 1500
+    var nextSpawnTime = [500, 500, 500, 500, 500, 500];
     
     var obstacleGroup;
     var obstacleSpeed = 50;
@@ -94,7 +95,7 @@ function bootStrap() {
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
 
-        player = game.add.sprite(350,395, 'frogUp');
+        player = game.add.sprite(346,395, 'frogUp');
         player.frame = 0;
 
         barrier = game.add.sprite(0,429, 'barrier');
@@ -104,31 +105,31 @@ function bootStrap() {
 
 
 
-        goal1 = game.add.sprite(64,0, 'goal');
+        goal1 = game.add.sprite(58,0, 'goal');
         goal1.alpha = 0;
         goal1.takenCareOf = false;
 
         game.physics.arcade.enable(goal1);
 
-        goal2 = game.add.sprite(192,0, 'goal');
+        goal2 = game.add.sprite(201,0, 'goal');
         goal2.alpha = 0;
         goal2.takenCareOf = false;
 
         game.physics.arcade.enable(goal2);
 
-        goal3 = game.add.sprite(352,0, 'goal');
+        goal3 = game.add.sprite(346,0, 'goal');
         goal3.alpha = 0;
         goal3.takenCareOf = false;
 
         game.physics.arcade.enable(goal3);
 
-        goal4 = game.add.sprite(480,0, 'goal');
+        goal4 = game.add.sprite(489,0, 'goal');
         goal4.alpha = 0;
         goal4.takenCareOf = false;
 
         game.physics.arcade.enable(goal4);
 
-        goal5 = game.add.sprite(608,0, 'goal');
+        goal5 = game.add.sprite(633,0, 'goal');
         goal5.alpha = 0;
         goal5.takenCareOf = false;
 
@@ -196,7 +197,8 @@ function bootStrap() {
         
         obstacleGroup = game.add.group();
         
-        spawnObstacle(1, 365, 'redCar', 'left'); //ROAD: 365, 300, 270, SIDEWALK: 235
+        //TEST SPAWN
+        //spawnObstacle(1, 365, 'redCar', 'left'); //ROAD: 365, 300, 270, SIDEWALK: 235
         
         obstacleGroup.enableBody = true;
         obstacleGroup.physics = Phaser.Physics.ARCADE;
@@ -401,24 +403,15 @@ function bootStrap() {
 
 
     
-    function spawnObstacle(x, y, sprite, direction) {
+    function spawnObstacle(x, y, sprite, direction, speed) {
         
         // console.log("Hello"); // - For Testing
             
         var obstacle = obstacleGroup.create(x, y, sprite);
         game.physics.arcade.enable(obstacle);
         obstacle.z = 6;
-
         
-        if (direction == 'left') {
-            
-            obstacleMovementLeft(obstacle);
-            
-        } else if (direction == 'right') {
-            
-            obstacleMovementRight(obstacle);
-            
-        }
+        obstacleMovement(obstacle, direction, speed);
         
     }
     
@@ -585,12 +578,16 @@ function bootStrap() {
 
     }
        
-    function spawnRate() {
+    function spawnRate(variation) {
         
-        min = Math.ceil(0);
-        max = Math.floor(300);
-        //console.log("SR");
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        var variation = Math.floor(Math.random() * (variation + 1));
+        if (variation % 2 == 0) {
+            //console.log(variation);
+            return variation;
+        } else {
+            //console.log("-" + variation);
+            return -variation;
+        }
         
     }
     
@@ -608,9 +605,13 @@ function bootStrap() {
     }*/
 
 
-    function obstacleMovementLeft(obstacle) {
+    function obstacleMovement(obstacle, direction, speed) {
 
-        obstacle.body.velocity.x = obstacleSpeed;
+        if (direction == "right") {
+            obstacle.body.velocity.x = -speed;
+        } else if (direction == "left") {
+            obstacle.body.velocity.x = speed;
+        }
 
 
         if (!obstacle.inCamera) { 
@@ -621,17 +622,6 @@ function bootStrap() {
 
     }
     
-    function obstacleMovementRight(obstacle) {
-
-        obstacle.body.velocity.x = -obstacleSpeed;
-        
-        if (!obstacle.inCamera) { 
-             
-            obstacle.destroy(); 
-
-        } 
-
-    }
 
 
     function gameplay() {
@@ -645,6 +635,45 @@ function bootStrap() {
         
         //ROAD: 365, 300, 270  SIDEWALK: 235
         
+        //REVAMPED SPAWNING
+        if(game.time.now > nextSpawnTime[1]) {
+            
+            spawnObstacle(1, 365, 'redCar', 'left', 50);
+            nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[2]) {
+
+            spawnObstacle(720, 332, 'semi', 'right', 80);            
+            nextSpawnTime[2] = game.time.now + 2500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[3]) {
+        
+            spawnObstacle(1, 300, 'purpleCar', 'left', 40);    
+            nextSpawnTime[3] = game.time.now + 3000 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[4]) {
+            
+            spawnObstacle(720, 270, 'redCar', 'right', 50);        
+            nextSpawnTime[4] = game.time.now + 3000 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[5]) {
+
+            spawnObstacle(1, 235, 'bike', 'left', 30);    
+            nextSpawnTime[5] = game.time.now + 3500 + spawnRate(1000);
+        
+        }
+                
+        
+        //Old Spawning
+        /*
         if (spawn == 1) {
             
             spawnObstacle(1, 365, 'redCar', 'left');
@@ -685,7 +714,7 @@ function bootStrap() {
 
             globalGameState = "beatTheGame";
 
-        }
+        */
 
     }
 
