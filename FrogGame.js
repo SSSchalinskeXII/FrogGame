@@ -57,7 +57,7 @@ function bootStrap() {
         
         // LOADING ALL IMAGES
         
-        game.load.image('img_placeholder', 'level1mockupplaceholder2.png');
+        game.load.image('img_placeholder', 'level1mockupplaceholder3.png');
         
         //Frog Sprites
         game.load.image('frogUp', 'frog_Sprite/frogBase.png');
