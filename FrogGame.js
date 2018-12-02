@@ -703,6 +703,7 @@ function bootStrap() {
             spawnObstacle(1, 235, 'img_nick', 'left');
             
         }
+        */
 
         if (game.time.now > DynamicPromptTimeOfInitialDisplay + 5000 && txt_DynamicPromptMessage != ""){
 
@@ -714,7 +715,8 @@ function bootStrap() {
 
             globalGameState = "beatTheGame";
 
-        */
+        }
+        
 
     }
 
