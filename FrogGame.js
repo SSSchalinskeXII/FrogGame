@@ -16,10 +16,16 @@ function bootStrap() {
     var playerAlive = true;
     var yjumpDistance = 1975;
     var xjumpDistance = 750; //old 1500
-    var nextSpawnTime = [500, 500, 500, 500, 500, 500];
+    var nextSpawnTime = [500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500];
     
     var obstacleGroup;
     var obstacleSpeed = 50;
+    
+    var logGroup;
+    var logSpeed = 50;
+    var onLog;
+    
+    var deathNote = 0;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
@@ -196,12 +202,16 @@ function bootStrap() {
         //snd_jump.play();
         
         obstacleGroup = game.add.group();
+        logGroup = game.add.group();
         
         //TEST SPAWN
         //spawnObstacle(1, 365, 'redCar', 'left'); //ROAD: 365, 300, 270, SIDEWALK: 235
         
         obstacleGroup.enableBody = true;
         obstacleGroup.physics = Phaser.Physics.ARCADE;
+        
+        logGroup.enableBody = true;
+        logGroup.physics = Phaser.Physics.ARCADE;
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -253,6 +263,8 @@ function bootStrap() {
         
         player.bringToTop();
         //player.z = 0;
+        
+        onLog = false;
     
         
     }
@@ -415,6 +427,16 @@ function bootStrap() {
         
     }
     
+    function spawnLog(x, y, sprite, direction, speed) {
+        
+        var log = logGroup.create(x, y, sprite);
+        game.physics.arcade.enable(log);
+        log.z = 6;
+        
+        logMovement(log, direction, speed);
+        
+    }
+    
     
     function frogDeath(frog) {
         
@@ -562,9 +584,31 @@ function bootStrap() {
         
         //water
         
-        if (player.position.y < 180) {
+        for (var l = 0; l < logGroup.countLiving(); l++) {
             
-            frogDeath(player);
+            if (checkOverlap(player, logGroup.children[l])){
+                
+                console.log('onLog');
+                onLog = true;
+                player.body.velocity.x = logGroup.children[l].body.velocity.x;
+                
+            }
+            
+        }
+        
+        if (player.position.y < 180 && !onLog) {
+             
+            
+            if (deathNote == 0) {
+                
+                deathNote = game.time.now + 250;
+                
+            } else if (game.time.now > deathNote) {
+                
+                deathNote = 0;
+                frogDeath(player);
+            
+            }
             
         }
         
@@ -638,7 +682,22 @@ function bootStrap() {
 
     }
     
+    function logMovement(log, direction, speed) {
 
+        if (direction == "right") {
+            log.body.velocity.x = -speed;
+        } else if (direction == "left") {
+            log.body.velocity.x = speed;
+        }
+
+
+        if (!log.inCamera) { 
+             
+            log.destroy(); 
+             
+        } 
+
+    }
 
     function gameplay() {
 
@@ -654,39 +713,73 @@ function bootStrap() {
         //REVAMPED SPAWNING
         if(game.time.now > nextSpawnTime[1]) {
             
-            spawnObstacle(1, 365, 'redCar', 'left', 50);
+            spawnObstacle(1, 368, 'redCar', 'left', 50);
             nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
         
         }
         
         if(game.time.now > nextSpawnTime[2]) {
 
-            spawnObstacle(720, 332, 'semi', 'right', 80);            
+            spawnObstacle(720, 335, 'semi', 'right', 80);            
             nextSpawnTime[2] = game.time.now + 2500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[3]) {
         
-            spawnObstacle(1, 300, 'purpleCar', 'left', 40);    
+            spawnObstacle(1, 302, 'purpleCar', 'left', 40);    
             nextSpawnTime[3] = game.time.now + 3000 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[4]) {
             
-            spawnObstacle(720, 270, 'redCar', 'right', 50);        
+            spawnObstacle(720, 269, 'redCar', 'right', 50);        
             nextSpawnTime[4] = game.time.now + 3000 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[5]) {
 
-            spawnObstacle(1, 235, 'bike', 'left', 30);    
+            spawnObstacle(1, 236, 'bike', 'left', 30);    
             nextSpawnTime[5] = game.time.now + 3500 + spawnRate(1000);
         
         }
-                
+         
+        if(game.time.now > nextSpawnTime[6]) {
+
+            spawnLog(720, 170, 'img_nick', 'right', 30);    
+            nextSpawnTime[6] = game.time.now + 3500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[7]) {
+
+            spawnLog(1, 137, 'img_nick', 'left', 30);    
+            nextSpawnTime[7] = game.time.now + 3500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[8]) {
+
+            spawnLog(720, 104, 'img_nick', 'right', 30);    
+            nextSpawnTime[8] = game.time.now + 3500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[9]) {
+
+            spawnLog(1, 71, 'img_nick', 'left', 30);    
+            nextSpawnTime[9] = game.time.now + 3500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[10]) {
+
+            spawnLog(720, 38, 'img_nick', 'right', 30);    
+            nextSpawnTime[10] = game.time.now + 3500 + spawnRate(1000);
+        
+        }
         
         //Old Spawning
         /*
