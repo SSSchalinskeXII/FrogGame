@@ -560,6 +560,14 @@ function bootStrap() {
             reachedGoal(player, goal5);
         }
         
+        //water
+        
+        if (player.position.y < 180) {
+            
+            frogDeath(player);
+            
+        }
+        
         //Collision Detection 
         /*
         if (playerAlive) {
