@@ -445,6 +445,15 @@ function bootStrap() {
             setNumberOfLives(5);
             goal1.alpha = 0;
             goal1.takenCareOf = false;
+            goal2.alpha = 0;
+            goal2.takenCareOf = false;
+            goal3.alpha = 0;
+            goal3.takenCareOf = false;
+            goal4.alpha = 0;
+            goal4.takenCareOf = false;
+            goal5.alpha = 0;
+            goal5.takenCareOf = false;
+            frogsSaved = 0;
             console.log('department of the interior:' + globalGameState);
             respawnPlayer();
             //globalGameState = "gameplay";                    
