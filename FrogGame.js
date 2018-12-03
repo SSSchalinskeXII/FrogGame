@@ -494,7 +494,7 @@ function bootStrap() {
             //  Move to the right
             while(canMove){
                 player.angle = 90;
-                player.body.velocity.x = xjumpDistance * 2;
+                player.body.velocity.x = xjumpDistance;
                 canMove = false;
                 
             }
@@ -502,7 +502,7 @@ function bootStrap() {
             //  Move to the left
             while(canMove){
                 player.angle = 270;
-                player.body.velocity.x = -xjumpDistance * 2;
+                player.body.velocity.x = -xjumpDistance;
                 canMove = false;
                 
             }
