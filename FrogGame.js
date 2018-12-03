@@ -1,5 +1,8 @@
 window.onload = function() {
+    bootStrap();
+}
 
+function bootStrap() {
     var globalGameState;
     var countdownTimer;
     var countdownTimerDuration;
@@ -12,7 +15,8 @@ window.onload = function() {
     var canMove = true;
     var playerAlive = true;
     var yjumpDistance = 1975;
-    var xjumpDistance = 1500;
+    var xjumpDistance = 750; //old 1500
+    var nextSpawnTime = [500, 500, 500, 500, 500, 500];
     
     var obstacleGroup;
     var obstacleSpeed = 50;
@@ -38,6 +42,8 @@ window.onload = function() {
     var goal4;
     var goal5;
 
+    var barrier;
+
     var frogsSaved = 0;
 
 
@@ -51,6 +57,8 @@ window.onload = function() {
         
         // LOADING ALL IMAGES
         
+        game.load.image('img_placeholder', 'level1mockupplaceholder3.png');
+        
         //Frog Sprites
         game.load.image('frogUp', 'frog_Sprite/frogBase.png');
         game.load.image('frogLeft', 'frog_Sprite/frog_Left.png');
@@ -63,8 +71,9 @@ window.onload = function() {
         game.load.image('purpleCar', 'Obstacles/car.png');
         game.load.image('semi', 'Obstacles/semi.png');
         game.load.image('bike', 'Obstacles/bike.png');
-        game.load.image('goal', 'Obstacles/goal.png');
+        game.load.image('goal', 'frog_Sprite/savedFrog.png');
         game.load.image('log', 'Obstacles/log.png');
+        game.load.image('barrier', 'Obstacles/barrier-row.png');
         
 
     }
@@ -85,37 +94,43 @@ window.onload = function() {
 
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
+        
 
-        player = game.add.sprite(350,428, 'frogUp');
+        player = game.add.sprite(346,410, 'frogUp');
         player.frame = 0;
+        player.anchor.setTo(0.5, 0.5);
 
+        barrier = game.add.sprite(0,429, 'barrier');
+        game.physics.arcade.enable(barrier);
+        barrier.alpha = 0;
 
-        goal1 = game.add.sprite(64,4, 'goal');
-        goal1.alpha = 0.2;
+            
+        goal1 = game.add.sprite(58,0, 'goal');
+        goal1.alpha = 0;
         goal1.takenCareOf = false;
 
         game.physics.arcade.enable(goal1);
 
-        goal2 = game.add.sprite(192,4, 'goal');
-        goal2.alpha = 0.2;
+        goal2 = game.add.sprite(201,0, 'goal');
+        goal2.alpha = 0;
         goal2.takenCareOf = false;
 
         game.physics.arcade.enable(goal2);
 
-        goal3 = game.add.sprite(352,4, 'goal');
-        goal3.alpha = 0.2;
+        goal3 = game.add.sprite(346,0, 'goal');
+        goal3.alpha = 0;
         goal3.takenCareOf = false;
 
         game.physics.arcade.enable(goal3);
 
-        goal4 = game.add.sprite(480,4, 'goal');
-        goal4.alpha = 0.2;
+        goal4 = game.add.sprite(489,0, 'goal');
+        goal4.alpha = 0;
         goal4.takenCareOf = false;
 
         game.physics.arcade.enable(goal4);
 
-        goal5 = game.add.sprite(608,4, 'goal');
-        goal5.alpha = 0.2;
+        goal5 = game.add.sprite(633,0, 'goal');
+        goal5.alpha = 0;
         goal5.takenCareOf = false;
 
         game.physics.arcade.enable(goal5);
@@ -128,21 +143,21 @@ window.onload = function() {
         txt_TimeLeft = game.add.text(300, 427, "Time:");
         txt_TimeLeft.fill = "#FFFFFF";
         txt_TimeLeft.anchor.set(0,0);
-        txt_TimeLeft.font ='Source Code Pro';
+        txt_TimeLeft.font ='monospace';
         txt_TimeLeft.fontSize ='33px';
 
         timeleft_seconds = 15;
         txt_SecondsLeft = game.add.text(410, 427, timeleft_seconds);
         txt_SecondsLeft.fill = "#FF0000";
         txt_SecondsLeft.anchor.set(0,0);
-        txt_SecondsLeft.font ='Source Code Pro';
+        txt_SecondsLeft.font ='monospace';
         txt_SecondsLeft.fontSize ='33px';
         
         // Score Text Elements
         txt_ScoreLabel = game.add.text(5, 427, "Score:");
         txt_ScoreLabel.fill = "#FFFFFF";
         txt_ScoreLabel.anchor.set(0,0);
-        txt_ScoreLabel.font ='Source Code Pro';
+        txt_ScoreLabel.font ='monospace';
         txt_ScoreLabel.fontSize ='33px';
 
         setCurrentScore(0);
@@ -150,14 +165,14 @@ window.onload = function() {
         txt_CurrentScoreDisplay = game.add.text(130, 427, txt_CurrentScoreValue);
         txt_CurrentScoreDisplay.fill = "#FF0000";
         txt_CurrentScoreDisplay.anchor.set(0,0);
-        txt_CurrentScoreDisplay.font ='Source Code Pro';
+        txt_CurrentScoreDisplay.font ='monospace';
         txt_CurrentScoreDisplay.fontSize ='33px';
 
         // Lives Text Elements
         txt_LivesLeftLabel = game.add.text(561, 427, "Lives:");
         txt_LivesLeftLabel.fill = "#FFFFFF";
         txt_LivesLeftLabel.anchor.set(0,0);
-        txt_LivesLeftLabel.font ='Source Code Pro';
+        txt_LivesLeftLabel.font ='monospace';
         txt_LivesLeftLabel.fontSize ='33px';
 
         setNumberOfLives(5);
@@ -165,7 +180,7 @@ window.onload = function() {
         txt_CurrentLivesLeftDisplay = game.add.text(680, 427, txt_CurrentLivesLeftValue);
         txt_CurrentLivesLeftDisplay.fill = "#FF0000";
         txt_CurrentLivesLeftDisplay.anchor.set(0,0);
-        txt_CurrentLivesLeftDisplay.font ='Source Code Pro';
+        txt_CurrentLivesLeftDisplay.font ='monospace';
         txt_CurrentLivesLeftDisplay.fontSize ='33px';
 
 
@@ -173,14 +188,20 @@ window.onload = function() {
         txt_DynamicPrompt = game.add.text(130, 213, "");
         txt_DynamicPrompt.fill = "#FF0000";
         txt_DynamicPrompt.anchor.set(0,0);
-        txt_DynamicPrompt.font ='Source Code Pro';
+        txt_DynamicPrompt.font ='monospace';
         txt_DynamicPrompt.fontSize ='45px';
 
         // Audio 
         snd_jump = game.add.audio('snd_jump');
         //snd_jump.play();
         
-        spawnObstacle(1, 350, 1, 'redCar');
+        obstacleGroup = game.add.group();
+        
+        //TEST SPAWN
+        //spawnObstacle(1, 365, 'redCar', 'left'); //ROAD: 365, 300, 270, SIDEWALK: 235
+        
+        obstacleGroup.enableBody = true;
+        obstacleGroup.physics = Phaser.Physics.ARCADE;
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -229,6 +250,9 @@ window.onload = function() {
             break;
 
         }
+        
+        player.bringToTop();
+        //player.z = 0;
     
         
     }
@@ -236,13 +260,14 @@ window.onload = function() {
     function render() {
 
 
-        game.debug.text("Current Game State: " + globalGameState, 32, 32);
+        //game.debug.text("Current Game State: " + globalGameState, 32, 32);
 
         updateTimerOSD();
         updateLivesOSD();
         updateScoreOSD();
         //dynamicPrompt();
         txt_DynamicPrompt.text = txt_DynamicPromptMessage;
+        txt_DynamicPrompt.bringToTop();
 
     }
 
@@ -378,22 +403,15 @@ window.onload = function() {
 
 
     
-    function spawnObstacle(x, y, sprite, direction) {
+    function spawnObstacle(x, y, sprite, direction, speed) {
         
         // console.log("Hello"); // - For Testing
             
         var obstacle = obstacleGroup.create(x, y, sprite);
         game.physics.arcade.enable(obstacle);
+        obstacle.z = 6;
         
-        if (direction == 'left') {
-            
-            obstacleMovementLeft(obstacle);
-            
-        } else if (direction == 'right') {
-            
-            obstacleMovementRight(obstacle);
-            
-        }
+        obstacleMovement(obstacle, direction, speed);
         
     }
     
@@ -411,7 +429,7 @@ window.onload = function() {
     
     function respawnPlayer() {
         globalGameState="gameplay";
-        player.reset(350,428);
+        player.reset(350,410);
         playerAlive = true;
         countdownTimer.removeAll();
         setTimer(countdownTimer, countdownTimerDuration);   
@@ -425,13 +443,12 @@ window.onload = function() {
             txt_DynamicPromptMessage = "";
             setTimer(countdownTimer, countdownTimerDuration);
             setNumberOfLives(5);
-            goal1.alpha = 0.2;
+            goal1.alpha = 0;
             goal1.takenCareOf = false;
             console.log('department of the interior:' + globalGameState);
             respawnPlayer();
             //globalGameState = "gameplay";                    
         } else {
-
             console.log('whatever');
             txt_DynamicPromptMessage = "GAME OVER\nPress\nENTER KEY\nto continue";
         }
@@ -459,35 +476,35 @@ window.onload = function() {
         if (cursors.up.isDown) {
             //  Move up
             while(canMove){
+                player.angle = 0;
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
-
-
+                
             }
         } else if (cursors.down.isDown){
             //  Move down
             while(canMove){
-                
+                player.angle = 180;
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
-
+                
                 
             }
         } else if (cursors.right.isDown){
             //  Move to the right
             while(canMove){
-                player.body.velocity.x = xjumpDistance;
+                player.angle = 90;
+                player.body.velocity.x = xjumpDistance * 2;
                 canMove = false;
-
-
+                
             }
         } else if (cursors.left.isDown){
             //  Move to the left
             while(canMove){
-                player.body.velocity.x = -xjumpDistance;
+                player.angle = 270;
+                player.body.velocity.x = -xjumpDistance * 2;
                 canMove = false;
-
-
+                
             }
         } else {
             canMove = true;
@@ -510,6 +527,10 @@ window.onload = function() {
         }
         
         
+        if (checkOverlap(player, barrier)){
+            player.y = player.y - 33;
+        }
+
         if (checkOverlap(player, goal1)){
             reachedGoal(player, goal1);
         }
@@ -556,12 +577,16 @@ window.onload = function() {
 
     }
        
-    function spawnRate() {
+    function spawnRate(variation) {
         
-        min = Math.ceil(0);
-        max = Math.floor(300);
-        //console.log("SR");
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        var variation = Math.floor(Math.random() * (variation + 1));
+        if (variation % 2 == 0) {
+            //console.log(variation);
+            return variation;
+        } else {
+            //console.log("-" + variation);
+            return -variation;
+        }
         
     }
     
@@ -579,9 +604,13 @@ window.onload = function() {
     }*/
 
 
-    function obstacleMovementLeft(obstacle) {
+    function obstacleMovement(obstacle, direction, speed) {
 
-        obstacle.body.velocity.x = obstacleSpeed;
+        if (direction == "right") {
+            obstacle.body.velocity.x = -speed;
+        } else if (direction == "left") {
+            obstacle.body.velocity.x = speed;
+        }
 
 
         if (!obstacle.inCamera) { 
@@ -592,20 +621,10 @@ window.onload = function() {
 
     }
     
-    function obstacleMovementRight(obstacle) {
-
-        obstacle.body.velocity.x = -obstacleSpeed;
-        
-        if (!obstacle.inCamera) { 
-             
-            obstacle.destroy(); 
-
-        } 
-
-    }
 
 
     function gameplay() {
+
 
         frogMovement();
         frogCollisionDetection();
@@ -615,6 +634,45 @@ window.onload = function() {
         
         //ROAD: 365, 300, 270  SIDEWALK: 235
         
+        //REVAMPED SPAWNING
+        if(game.time.now > nextSpawnTime[1]) {
+            
+            spawnObstacle(1, 365, 'redCar', 'left', 50);
+            nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[2]) {
+
+            spawnObstacle(720, 332, 'semi', 'right', 80);            
+            nextSpawnTime[2] = game.time.now + 2500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[3]) {
+        
+            spawnObstacle(1, 300, 'purpleCar', 'left', 40);    
+            nextSpawnTime[3] = game.time.now + 3000 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[4]) {
+            
+            spawnObstacle(720, 270, 'redCar', 'right', 50);        
+            nextSpawnTime[4] = game.time.now + 3000 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[5]) {
+
+            spawnObstacle(1, 235, 'bike', 'left', 30);    
+            nextSpawnTime[5] = game.time.now + 3500 + spawnRate(1000);
+        
+        }
+                
+        
+        //Old Spawning
+        /*
         if (spawn == 1) {
             
             spawnObstacle(1, 365, 'img_nick', 'left');
@@ -644,6 +702,7 @@ window.onload = function() {
             spawnObstacle(1, 235, 'img_nick', 'left');
             
         }
+        */
 
         if (game.time.now > DynamicPromptTimeOfInitialDisplay + 5000 && txt_DynamicPromptMessage != ""){
 
@@ -656,6 +715,7 @@ window.onload = function() {
             globalGameState = "beatTheGame";
 
         }
+        
 
     }
 
