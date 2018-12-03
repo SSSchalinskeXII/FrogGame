@@ -26,6 +26,7 @@ function bootStrap() {
     var onLog;
     
     var deathNote = 0;
+    var order66 = false;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
@@ -105,7 +106,10 @@ function bootStrap() {
         player = game.add.sprite(346,410, 'frogUp');
         player.frame = 0;
         player.anchor.setTo(0.5, 0.5);
-
+        game.physics.arcade.enable(player);
+        player.body.collideWorldBounds = true;
+        player.body.setSize(10, 10, 10, 10);
+                
         barrier = game.add.sprite(0,429, 'barrier');
         game.physics.arcade.enable(barrier);
         barrier.alpha = 0;
@@ -142,8 +146,6 @@ function bootStrap() {
         game.physics.arcade.enable(goal5);
 
 
-        game.physics.arcade.enable(player);
-        player.body.collideWorldBounds = true;
 
         // Time Left Text Elements
         txt_TimeLeft = game.add.text(300, 427, "Time:");
@@ -506,41 +508,41 @@ function bootStrap() {
 
         if (cursors.up.isDown) {
             //  Move up
-            while(canMove){
+            if(canMove){
                 player.angle = 0;
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
-                
             }
+            
         } else if (cursors.down.isDown){
             //  Move down
-            while(canMove){
+            if(canMove){
                 player.angle = 180;
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
-                
-                
             }
+            
         } else if (cursors.right.isDown){
+            moved = true;
             //  Move to the right
-            while(canMove){
+            if(canMove){               
                 player.angle = 90;
                 player.body.velocity.x = xjumpDistance;
                 canMove = false;
-                
             }
+            
         } else if (cursors.left.isDown){
             //  Move to the left
-            while(canMove){
+            if(canMove){
                 player.angle = 270;
                 player.body.velocity.x = -xjumpDistance;
-                canMove = false;
-                
+                canMove = false;    
             }
+            
         } else {
             canMove = true;
         }
-
+        
     }
 
     function frogCollisionDetection() {
@@ -590,8 +592,10 @@ function bootStrap() {
                 
                 console.log('onLog');
                 onLog = true;
-                player.body.velocity.x = logGroup.children[l].body.velocity.x;
                 
+                if (canMove) {
+                    player.body.velocity.x = logGroup.children[l].body.velocity.x;
+                } 
             }
             
         }
@@ -601,14 +605,18 @@ function bootStrap() {
             
             if (deathNote == 0) {
                 
-                deathNote = game.time.now + 250;
+                deathNote = game.time.now + 150;
+                order66 = true;
                 
-            } else if (game.time.now > deathNote) {
-                
-                deathNote = 0;
-                frogDeath(player);
-            
             }
+            
+        }
+        
+        if (game.time.now > deathNote && order66) {
+                
+            deathNote = 0;
+            frogDeath(player);
+            order66 = false;
             
         }
         
@@ -748,36 +756,36 @@ function bootStrap() {
          
         if(game.time.now > nextSpawnTime[6]) {
 
-            spawnLog(720, 170, 'img_nick', 'right', 30);    
-            nextSpawnTime[6] = game.time.now + 3500 + spawnRate(1000);
+            spawnLog(720, 170, 'log', 'right', 30);    
+            nextSpawnTime[6] = game.time.now + 5500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[7]) {
 
-            spawnLog(1, 137, 'img_nick', 'left', 30);    
-            nextSpawnTime[7] = game.time.now + 3500 + spawnRate(1000);
+            spawnLog(1, 137, 'log', 'left', 30);    
+            nextSpawnTime[7] = game.time.now + 5500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[8]) {
 
-            spawnLog(720, 104, 'img_nick', 'right', 30);    
-            nextSpawnTime[8] = game.time.now + 3500 + spawnRate(1000);
+            spawnLog(720, 104, 'log', 'right', 30);    
+            nextSpawnTime[8] = game.time.now + 5500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[9]) {
 
-            spawnLog(1, 71, 'img_nick', 'left', 30);    
-            nextSpawnTime[9] = game.time.now + 3500 + spawnRate(1000);
+            spawnLog(1, 71, 'log', 'left', 30);    
+            nextSpawnTime[9] = game.time.now + 5500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[10]) {
 
-            spawnLog(720, 38, 'img_nick', 'right', 30);    
-            nextSpawnTime[10] = game.time.now + 3500 + spawnRate(1000);
+            spawnLog(720, 38, 'log', 'right', 30);    
+            nextSpawnTime[10] = game.time.now + 5500 + spawnRate(1000);
         
         }
         
