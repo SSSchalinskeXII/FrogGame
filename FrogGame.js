@@ -94,17 +94,17 @@ function bootStrap() {
 
         // Placeholder Background
         game.add.sprite(0,0, 'img_placeholder');
+        
 
-        player = game.add.sprite(346,395, 'frogUp');
+        player = game.add.sprite(346,410, 'frogUp');
         player.frame = 0;
+        player.anchor.setTo(0.5, 0.5);
 
         barrier = game.add.sprite(0,429, 'barrier');
         game.physics.arcade.enable(barrier);
         barrier.alpha = 0;
 
-
-
-
+            
         goal1 = game.add.sprite(58,0, 'goal');
         goal1.alpha = 0;
         goal1.takenCareOf = false;
@@ -429,7 +429,7 @@ function bootStrap() {
     
     function respawnPlayer() {
         globalGameState="gameplay";
-        player.reset(350,428);
+        player.reset(350,410);
         playerAlive = true;
         countdownTimer.removeAll();
         setTimer(countdownTimer, countdownTimerDuration);   
@@ -449,7 +449,6 @@ function bootStrap() {
             respawnPlayer();
             //globalGameState = "gameplay";                    
         } else {
-
             console.log('whatever');
             txt_DynamicPromptMessage = "GAME OVER\nPress\nENTER KEY\nto continue";
         }
@@ -477,35 +476,35 @@ function bootStrap() {
         if (cursors.up.isDown) {
             //  Move up
             while(canMove){
+                player.angle = 0;
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
-
-
+                
             }
         } else if (cursors.down.isDown){
             //  Move down
             while(canMove){
-                
+                player.angle = 180;
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
-
+                
                 
             }
         } else if (cursors.right.isDown){
             //  Move to the right
             while(canMove){
-                player.body.velocity.x = xjumpDistance;
+                player.angle = 90;
+                player.body.velocity.x = xjumpDistance * 2;
                 canMove = false;
-
-
+                
             }
         } else if (cursors.left.isDown){
             //  Move to the left
             while(canMove){
-                player.body.velocity.x = -xjumpDistance;
+                player.angle = 270;
+                player.body.velocity.x = -xjumpDistance * 2;
                 canMove = false;
-
-
+                
             }
         } else {
             canMove = true;
