@@ -16,10 +16,17 @@ function bootStrap() {
     var playerAlive = true;
     var yjumpDistance = 1975;
     var xjumpDistance = 750; //old 1500
-    var nextSpawnTime = [500, 500, 500, 500, 500, 500];
+    var nextSpawnTime = [500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500];
     
     var obstacleGroup;
     var obstacleSpeed = 50;
+    
+    var logGroup;
+    var logSpeed = 50;
+    var onLog;
+    
+    var deathNote = 0;
+    var order66 = false;
 
     var txt_SecondsLeft;
     var timeleft_seconds;
@@ -99,7 +106,10 @@ function bootStrap() {
         player = game.add.sprite(346,410, 'frogUp');
         player.frame = 0;
         player.anchor.setTo(0.5, 0.5);
-
+        game.physics.arcade.enable(player);
+        player.body.collideWorldBounds = true;
+        player.body.setSize(10, 10, 10, 10);
+                
         barrier = game.add.sprite(0,429, 'barrier');
         game.physics.arcade.enable(barrier);
         barrier.alpha = 0;
@@ -136,8 +146,6 @@ function bootStrap() {
         game.physics.arcade.enable(goal5);
 
 
-        game.physics.arcade.enable(player);
-        player.body.collideWorldBounds = true;
 
         // Time Left Text Elements
         txt_TimeLeft = game.add.text(300, 427, "Time:");
@@ -196,12 +204,16 @@ function bootStrap() {
         //snd_jump.play();
         
         obstacleGroup = game.add.group();
+        logGroup = game.add.group();
         
         //TEST SPAWN
         //spawnObstacle(1, 365, 'redCar', 'left'); //ROAD: 365, 300, 270, SIDEWALK: 235
         
         obstacleGroup.enableBody = true;
         obstacleGroup.physics = Phaser.Physics.ARCADE;
+        
+        logGroup.enableBody = true;
+        logGroup.physics = Phaser.Physics.ARCADE;
 
         input_EnterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
@@ -253,6 +265,8 @@ function bootStrap() {
         
         player.bringToTop();
         //player.z = 0;
+        
+        onLog = false;
     
         
     }
@@ -415,6 +429,16 @@ function bootStrap() {
         
     }
     
+    function spawnLog(x, y, sprite, direction, speed) {
+        
+        var log = logGroup.create(x, y, sprite);
+        game.physics.arcade.enable(log);
+        log.z = 6;
+        
+        logMovement(log, direction, speed);
+        
+    }
+    
     
     function frogDeath(frog) {
         
@@ -484,41 +508,41 @@ function bootStrap() {
 
         if (cursors.up.isDown) {
             //  Move up
-            while(canMove){
+            if(canMove){
                 player.angle = 0;
                 player.body.velocity.y = -yjumpDistance;
                 canMove = false;
-                
             }
+            
         } else if (cursors.down.isDown){
             //  Move down
-            while(canMove){
+            if(canMove){
                 player.angle = 180;
                 player.body.velocity.y = yjumpDistance;
                 canMove = false;
-                
-                
             }
+            
         } else if (cursors.right.isDown){
+            moved = true;
             //  Move to the right
-            while(canMove){
+            if(canMove){               
                 player.angle = 90;
                 player.body.velocity.x = xjumpDistance;
                 canMove = false;
-                
             }
+            
         } else if (cursors.left.isDown){
             //  Move to the left
-            while(canMove){
+            if(canMove){
                 player.angle = 270;
                 player.body.velocity.x = -xjumpDistance;
-                canMove = false;
-                
+                canMove = false;    
             }
+            
         } else {
             canMove = true;
         }
-
+        
     }
 
     function frogCollisionDetection() {
@@ -558,6 +582,42 @@ function bootStrap() {
         
         if (checkOverlap(player, goal5)){
             reachedGoal(player, goal5);
+        }
+        
+        //water
+        
+        for (var l = 0; l < logGroup.countLiving(); l++) {
+            
+            if (checkOverlap(player, logGroup.children[l])){
+                
+                console.log('onLog');
+                onLog = true;
+                
+                if (canMove) {
+                    player.body.velocity.x = logGroup.children[l].body.velocity.x;
+                } 
+            }
+            
+        }
+        
+        if (player.position.y < 180 && !onLog) {
+             
+            
+            if (deathNote == 0) {
+                
+                deathNote = game.time.now + 150;
+                order66 = true;
+                
+            }
+            
+        }
+        
+        if (game.time.now > deathNote && order66) {
+                
+            deathNote = 0;
+            frogDeath(player);
+            order66 = false;
+            
         }
         
         //Collision Detection 
@@ -630,7 +690,22 @@ function bootStrap() {
 
     }
     
+    function logMovement(log, direction, speed) {
 
+        if (direction == "right") {
+            log.body.velocity.x = -speed;
+        } else if (direction == "left") {
+            log.body.velocity.x = speed;
+        }
+
+
+        if (!log.inCamera) { 
+             
+            log.destroy(); 
+             
+        } 
+
+    }
 
     function gameplay() {
 
@@ -646,39 +721,73 @@ function bootStrap() {
         //REVAMPED SPAWNING
         if(game.time.now > nextSpawnTime[1]) {
             
-            spawnObstacle(1, 365, 'redCar', 'left', 50);
+            spawnObstacle(1, 368, 'redCar', 'left', 50);
             nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
         
         }
         
         if(game.time.now > nextSpawnTime[2]) {
 
-            spawnObstacle(720, 332, 'semi', 'right', 80);            
+            spawnObstacle(720, 335, 'semi', 'right', 80);            
             nextSpawnTime[2] = game.time.now + 2500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[3]) {
         
-            spawnObstacle(1, 300, 'purpleCar', 'left', 40);    
+            spawnObstacle(1, 302, 'purpleCar', 'left', 40);    
             nextSpawnTime[3] = game.time.now + 3000 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[4]) {
             
-            spawnObstacle(720, 270, 'redCar', 'right', 50);        
+            spawnObstacle(720, 269, 'redCar', 'right', 50);        
             nextSpawnTime[4] = game.time.now + 3000 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[5]) {
 
-            spawnObstacle(1, 235, 'bike', 'left', 30);    
+            spawnObstacle(1, 236, 'bike', 'left', 30);    
             nextSpawnTime[5] = game.time.now + 3500 + spawnRate(1000);
         
         }
-                
+         
+        if(game.time.now > nextSpawnTime[6]) {
+
+            spawnLog(720, 170, 'log', 'right', 30);    
+            nextSpawnTime[6] = game.time.now + 5500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[7]) {
+
+            spawnLog(1, 137, 'log', 'left', 30);    
+            nextSpawnTime[7] = game.time.now + 5500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[8]) {
+
+            spawnLog(720, 104, 'log', 'right', 30);    
+            nextSpawnTime[8] = game.time.now + 5500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[9]) {
+
+            spawnLog(1, 71, 'log', 'left', 30);    
+            nextSpawnTime[9] = game.time.now + 5500 + spawnRate(1000);
+        
+        }
+        
+        if(game.time.now > nextSpawnTime[10]) {
+
+            spawnLog(720, 38, 'log', 'right', 30);    
+            nextSpawnTime[10] = game.time.now + 5500 + spawnRate(1000);
+        
+        }
         
         //Old Spawning
         /*
