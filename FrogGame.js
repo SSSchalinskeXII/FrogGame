@@ -721,7 +721,7 @@ function bootStrap() {
         //REVAMPED SPAWNING
         if(game.time.now > nextSpawnTime[1]) {
             
-            spawnObstacle(1, 368, 'redCar', 'left', 50);
+            spawnObstacle(-15, 368, 'redCar', 'left', 50);
             nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
         
         }
@@ -735,7 +735,7 @@ function bootStrap() {
         
         if(game.time.now > nextSpawnTime[3]) {
         
-            spawnObstacle(1, 302, 'purpleCar', 'left', 40);    
+            spawnObstacle(-15, 302, 'purpleCar', 'left', 40);    
             nextSpawnTime[3] = game.time.now + 3000 + spawnRate(1000);
         
         }
@@ -749,7 +749,7 @@ function bootStrap() {
         
         if(game.time.now > nextSpawnTime[5]) {
 
-            spawnObstacle(1, 236, 'bike', 'left', 30);    
+            spawnObstacle(-15, 236, 'bike', 'left', 30);    
             nextSpawnTime[5] = game.time.now + 3500 + spawnRate(1000);
         
         }
@@ -763,7 +763,7 @@ function bootStrap() {
         
         if(game.time.now > nextSpawnTime[7]) {
 
-            spawnLog(1, 137, 'log', 'left', 30);    
+            spawnLog(-15, 137, 'log', 'left', 30);    
             nextSpawnTime[7] = game.time.now + 5500 + spawnRate(1000);
         
         }
@@ -777,7 +777,7 @@ function bootStrap() {
         
         if(game.time.now > nextSpawnTime[9]) {
 
-            spawnLog(1, 71, 'log', 'left', 30);    
+            spawnLog(-15, 71, 'log', 'left', 30);    
             nextSpawnTime[9] = game.time.now + 5500 + spawnRate(1000);
         
         }
