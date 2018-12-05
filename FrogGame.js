@@ -81,6 +81,7 @@ function bootStrap() {
         game.load.image('goal', 'frog_Sprite/savedFrog.png');
         game.load.image('log', 'Obstacles/log.png');
         game.load.image('barrier', 'Obstacles/barrier-row.png');
+        game.load.image('redCar_Right', 'Obstacles/redCar_Right.png');
         
 
     }
