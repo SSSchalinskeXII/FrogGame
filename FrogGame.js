@@ -81,7 +81,8 @@ function bootStrap() {
         game.load.image('goal', 'frog_Sprite/savedFrog.png');
         game.load.image('log', 'Obstacles/log.png');
         game.load.image('barrier', 'Obstacles/barrier-row.png');
-        
+        game.load.image('redCar_Right', 'Obstacles/redCar_Right.png');
+        game.load.image('fly', 'Obstacles/fly.png');
 
     }
 
@@ -725,7 +726,7 @@ function bootStrap() {
         //REVAMPED SPAWNING
         if(game.time.now > nextSpawnTime[1]) {
             
-            spawnObstacle(-15, 368, 'redCar', 'left', 50);
+            spawnObstacle(-15, 368, 'redCar_Right', 'left', 50);
             nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
         
         }
