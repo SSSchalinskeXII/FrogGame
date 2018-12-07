@@ -17,10 +17,18 @@ function bootStrap() {
     var playerAlive = true;
     var yjumpDistance = 1975;
     var xjumpDistance = 750; //old 1500
-    var nextSpawnTime = [500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500];
+    
+    var nextSpawnTime = [500, 500, 500, 500, 500, 500, 500, 500, 500, 500];
+    var obstacleXPosition = [-15, 720, -15, 720, -15, 720, -100, 720, -100, 720];
+    var obstacleYPosition = [368, 335, 302, 269, 236, 170, 137, 104, 71, 38];
+    var obstacleSpriteName = ['redCar_Right', 'semi', 'purpleCar', 'redCar', 'bike', 'log', 'log', 'log', 'log', 'log'];
+    var obstacleDirection = ['left', 'right', 'left', 'right', 'left', 'right', 'left', 'right', 'left', 'right'];
+    var obstacleSpeed = [50, 80, 40, 50, 30, 60, 50, 30, 70, 40, 100];
+    var obstacleGroup = ['obstacle', 'obstacle', 'obstacle', 'obstacle', 'obstacle', 'log', 'log', 'log', 'log', 'log'];
+    var obsticalBaseSpawnRate = [2250, 2500, 3000, 3000, 3500, 4500, 6500, 8500, 4500, 6500];
+    var obstacleSpawnVariance = [500, 1000, 1000, 1000, 1000, 1000, 2000, 1500, 500, 1500];
     
     var obstacleGroup;
-    var obstacleSpeed = 50;
     
     var logGroup;
     var logSpeed = 50;
@@ -433,13 +441,21 @@ function bootStrap() {
 
 
     
-    function spawnObstacle(x, y, sprite, direction, speed) {
+    function spawnObstacle(x, y, sprite, direction, speed, group) {
         
         // console.log("Hello"); // - For Testing
-            
-        var obstacle = obstacleGroup.create(x, y, sprite);
+        /*
+        var obstacle;
+        
+        if (group == "obstacle") {
+            obstacle = obstacleGroup.create(x, y, sprite);
+        } else if (group == "log") {
+            obstacle = logGroup.create(x, y, sprite);
+        }
+        */
+        obstacle = obstacleGroup.create(x, y, sprite);
         game.physics.arcade.enable(obstacle);
-        obstacle.z = 6;
+        //obstacle.z = 6;
 
 
 
@@ -450,11 +466,11 @@ function bootStrap() {
         }
 
         
-        
+        console.log(speed);
         obstacleMovement(obstacle, direction, speed);
         
     }
-    
+/*    
     function spawnLog(x, y, sprite, direction, speed) {
         
         var log = logGroup.create(x, y, sprite);
@@ -464,7 +480,7 @@ function bootStrap() {
         logMovement(log, direction, speed);
         
     }
-    
+  */  
     
     function frogDeath(frog, frogKiller) {
         
@@ -791,74 +807,85 @@ function bootStrap() {
         //ROAD: 365, 300, 270  SIDEWALK: 235
         
         //REVAMPED SPAWNING
+        /*
         if(game.time.now > nextSpawnTime[1]) {
             
-            spawnObstacle(-15, 368, 'redCar_Right', 'left', 50);
+            spawnObstacle(-15, 368, 'redCar_Right', 'left', 50, 'obstacle');
             nextSpawnTime[1] = game.time.now + 2250 + spawnRate(500);
         
         }
         
         if(game.time.now > nextSpawnTime[2]) {
 
-            spawnObstacle(720, 335, 'semi', 'right', 80);            
+            spawnObstacle(720, 335, 'semi', 'right', 80, 'obstacle');            
             nextSpawnTime[2] = game.time.now + 2500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[3]) {
         
-            spawnObstacle(-15, 302, 'purpleCar', 'left', 40);    
+            spawnObstacle(-15, 302, 'purpleCar', 'left', 40, 'obstacle');    
             nextSpawnTime[3] = game.time.now + 3000 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[4]) {
             
-            spawnObstacle(720, 269, 'redCar', 'right', 50);        
+            spawnObstacle(720, 269, 'redCar', 'right', 50, 'obstacle');        
             nextSpawnTime[4] = game.time.now + 3000 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[5]) {
 
-            spawnObstacle(-15, 236, 'bike', 'left', 30);    
+            spawnObstacle(-15, 236, 'bike', 'left', 30, 'obstacle');    
             nextSpawnTime[5] = game.time.now + 3500 + spawnRate(1000);
         
         }
          
         if(game.time.now > nextSpawnTime[6]) {
 
-            spawnLog(720, 170, 'log', 'right', 60);    
+            spawnObstacle(720, 170, 'log', 'right', 60, 'log');    
             nextSpawnTime[6] = game.time.now + 4500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[7]) {
 
-            spawnLog(-100, 137, 'log', 'left', 50);    
+            spawnObstacle(-100, 137, 'log', 'left', 50, 'log');    
             nextSpawnTime[7] = game.time.now + 6500 + spawnRate(2000);
         
         }
         
         if(game.time.now > nextSpawnTime[8]) {
 
-            spawnLog(720, 104, 'log', 'right', 30);    
+            spawnObstacle(720, 104, 'log', 'right', 30, 'log');    
             nextSpawnTime[8] = game.time.now + 8500 + spawnRate(1500);
         
         }
         
         if(game.time.now > nextSpawnTime[9]) {
 
-            spawnLog(-100, 71, 'log', 'left', 70);    
+            spawnObstacle(-100, 71, 'log', 'left', 70, 'log');    
             nextSpawnTime[9] = game.time.now + 4500 + spawnRate(500);
         
         }
         
         if(game.time.now > nextSpawnTime[10]) {
 
-            spawnLog(720, 38, 'log', 'right', 40);    
+            spawnObstacle(720, 38, 'log', 'right', 40, 'log');    
             nextSpawnTime[10] = game.time.now + 6500 + spawnRate(1500);
         
+        }
+        */
+        //RE-REVAMPED SPAWNING
+        
+        for (i = 0; i < nextSpawnTime.length; i++){
+            if(game.time.now > nextSpawnTime[i]) {
+            
+                spawnObstacle(obstacleXPosition[i], obstacleYPosition[i], obstacleSpriteName[i], obstacleDirection[i], obstacleSpeed[i], obstacleGroup[i]);    
+                nextSpawnTime[i] = game.time.now + obsticalBaseSpawnRate[i] + spawnRate(obstacleSpawnVariance[i]);
+            }
         }
         
         //Old Spawning
