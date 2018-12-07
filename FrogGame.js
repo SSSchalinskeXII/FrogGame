@@ -18,16 +18,29 @@ function bootStrap() {
     var yjumpDistance = 1975;
     var xjumpDistance = 750; //old 1500
     
+    var obstacles = [
+        [500, -25, 368, 'redCar_Right', 'left', 50, 'obstacle', 2250, 500],
+        [500, 720, 335, 'semi', 'right', 80, 'obstacle', 2500, 1000],
+        [500, -25, 302, 'purpleCar', 'left', 40, 'obstacle', 3000, 1000],
+        [500, 720, 269, 'redCar', 'right', 50, 'obstacle', 3000, 1000],
+        [500, -25, 236, 'bike', 'left', 30, 'obstacle', 3500, 1000],
+        [500, 720, 170, 'log', 'right', 60, 'log', 4500, 1000],
+        [500, -25, 137, 'log', 'left', 50, 'log', 6500, 2000],
+        [500, 720, 104, 'log', 'right', 30, 'log', 8500, 1500],
+        [500, -25, 71, 'log', 'left', 70, 'log', 4500, 500],
+        [500, 720, 38, 'log', 'right', 40, 'log', 6500, 1500]
+    ];
+    /*
     var nextSpawnTime = [500, 500, 500, 500, 500, 500, 500, 500, 500, 500];
     var obstacleXPosition = [-15, 720, -15, 720, -15, 720, -100, 720, -100, 720];
     var obstacleYPosition = [368, 335, 302, 269, 236, 170, 137, 104, 71, 38];
     var obstacleSpriteName = ['redCar_Right', 'semi', 'purpleCar', 'redCar', 'bike', 'log', 'log', 'log', 'log', 'log'];
     var obstacleDirection = ['left', 'right', 'left', 'right', 'left', 'right', 'left', 'right', 'left', 'right'];
-    var obstacleSpeed = [50, 80, 40, 50, 30, 60, 50, 30, 70, 40, 100];
+    var obstacleSpeed = [50, 80, 40, 50, 30, 60, 50, 30, 70, 40];
     var obstacleGroup = ['obstacle', 'obstacle', 'obstacle', 'obstacle', 'obstacle', 'log', 'log', 'log', 'log', 'log'];
     var obsticalBaseSpawnRate = [2250, 2500, 3000, 3000, 3500, 4500, 6500, 8500, 4500, 6500];
     var obstacleSpawnVariance = [500, 1000, 1000, 1000, 1000, 1000, 2000, 1500, 500, 1500];
-    
+    */
     var obstacleGroup;
     
     var logGroup;
@@ -444,7 +457,7 @@ function bootStrap() {
     function spawnObstacle(x, y, sprite, direction, speed, group) {
         
         // console.log("Hello"); // - For Testing
-        /*
+        
         var obstacle;
         
         if (group == "obstacle") {
@@ -452,8 +465,8 @@ function bootStrap() {
         } else if (group == "log") {
             obstacle = logGroup.create(x, y, sprite);
         }
-        */
-        obstacle = obstacleGroup.create(x, y, sprite);
+        
+        //obstacle = obstacleGroup.create(x, y, sprite);
         game.physics.arcade.enable(obstacle);
         //obstacle.z = 6;
 
@@ -879,13 +892,24 @@ function bootStrap() {
         }
         */
         //RE-REVAMPED SPAWNING
-        
+        /*
         for (i = 0; i < nextSpawnTime.length; i++){
             if(game.time.now > nextSpawnTime[i]) {
             
                 spawnObstacle(obstacleXPosition[i], obstacleYPosition[i], obstacleSpriteName[i], obstacleDirection[i], obstacleSpeed[i], obstacleGroup[i]);    
                 nextSpawnTime[i] = game.time.now + obsticalBaseSpawnRate[i] + spawnRate(obstacleSpawnVariance[i]);
             }
+        }
+        */
+        for (i = 0; i < obstacles.length; i++) {
+            
+           if(game.time.now > obstacles[i][0]) {
+            
+                spawnObstacle(obstacles[i][1], obstacles[i][2], obstacles[i][3], obstacles[i][4], obstacles[i][5], obstacles[i][6]);    
+                obstacles[i][0] = game.time.now + obstacles[i][7] + spawnRate(obstacles[i][8]);
+            } 
+                            
+            
         }
         
         //Old Spawning
