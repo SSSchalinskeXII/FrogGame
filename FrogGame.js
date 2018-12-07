@@ -195,11 +195,16 @@ function bootStrap() {
 
 
         // Dynamic Text Prompt
-        txt_DynamicPrompt = game.add.text(130, 213, "");
-        txt_DynamicPrompt.fill = "#FF0000";
+        txt_DynamicPrompt = game.add.text(130, 78, "");
+        //txt_DynamicPrompt.fill = "#FF0000";
         txt_DynamicPrompt.anchor.set(0,0);
         txt_DynamicPrompt.font ='monospace';
         txt_DynamicPrompt.fontSize ='45px';
+
+        //  Stroke color and thickness
+        txt_DynamicPrompt.stroke = '#000000';
+        txt_DynamicPrompt.strokeThickness = 16;
+        txt_DynamicPrompt.fill = '#43d637';
 
         // Audio 
         snd_jump = game.add.audio('snd_jump');
@@ -505,7 +510,7 @@ function bootStrap() {
             //globalGameState = "gameplay";                    
         } else {
             console.log('whatever');
-            txt_DynamicPromptMessage = "GAME OVER\nPress\nENTER KEY\nto continue";
+            txt_DynamicPromptMessage = "GAME OVER\nSCORE: " + txt_CurrentScoreValue  + "\nPress ENTER KEY\nto continue";
         }
 
     }
