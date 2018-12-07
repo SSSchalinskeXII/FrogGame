@@ -81,7 +81,8 @@ function bootStrap() {
         game.load.image('goal', 'frog_Sprite/savedFrog.png');
         game.load.image('log', 'Obstacles/log.png');
         game.load.image('barrier', 'Obstacles/barrier-row.png');
-        
+        game.load.image('redCar_Right', 'Obstacles/redCar_Right.png');
+        game.load.image('fly', 'Obstacles/fly.png');
 
     }
 
@@ -118,34 +119,32 @@ function bootStrap() {
         goal1 = game.add.sprite(58,0, 'goal');
         goal1.alpha = 0;
         goal1.takenCareOf = false;
-
         game.physics.arcade.enable(goal1);
+        goal1.body.immovable = true;
 
         goal2 = game.add.sprite(201,0, 'goal');
         goal2.alpha = 0;
         goal2.takenCareOf = false;
-
         game.physics.arcade.enable(goal2);
+        goal2.body.immovable = true;
 
         goal3 = game.add.sprite(346,0, 'goal');
         goal3.alpha = 0;
         goal3.takenCareOf = false;
-
         game.physics.arcade.enable(goal3);
+        goal3.body.immovable = true;
 
         goal4 = game.add.sprite(489,0, 'goal');
         goal4.alpha = 0;
         goal4.takenCareOf = false;
-
         game.physics.arcade.enable(goal4);
+        goal4.body.immovable = true;
 
         goal5 = game.add.sprite(633,0, 'goal');
         goal5.alpha = 0;
         goal5.takenCareOf = false;
-
         game.physics.arcade.enable(goal5);
-
-
+        goal5.body.immovable = true;
 
         // Time Left Text Elements
         txt_TimeLeft = game.add.text(300, 427, "Time:");
@@ -564,6 +563,12 @@ function bootStrap() {
             player.y = player.y - 33;
         }
 
+        game.physics.arcade.collide(player, goal1, reachedGoal, null, this); 
+        game.physics.arcade.collide(player, goal2, reachedGoal, null, this); 
+        game.physics.arcade.collide(player, goal3, reachedGoal, null, this); 
+        game.physics.arcade.collide(player, goal4, reachedGoal, null, this); 
+        game.physics.arcade.collide(player, goal5, reachedGoal, null, this); 
+/*
         if (checkOverlap(player, goal1)){
             reachedGoal(player, goal1);
         }
@@ -583,7 +588,7 @@ function bootStrap() {
         if (checkOverlap(player, goal5)){
             reachedGoal(player, goal5);
         }
-        
+*/        
         //water
         
         for (var l = 0; l < logGroup.countLiving(); l++) {
@@ -721,7 +726,7 @@ function bootStrap() {
         //REVAMPED SPAWNING
         if(game.time.now > nextSpawnTime[1]) {
             
-            spawnObstacle(-15, 368, 'redCar', 'left', 50);
+            spawnObstacle(-15, 368, 'redCar_Right', 'left', 50);
             nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
         
         }
