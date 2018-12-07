@@ -794,7 +794,7 @@ function bootStrap() {
         if(game.time.now > nextSpawnTime[1]) {
             
             spawnObstacle(-15, 368, 'redCar_Right', 'left', 50);
-            nextSpawnTime[1] = game.time.now + 2000 + spawnRate(500);
+            nextSpawnTime[1] = game.time.now + 2250 + spawnRate(500);
         
         }
         
@@ -828,36 +828,36 @@ function bootStrap() {
          
         if(game.time.now > nextSpawnTime[6]) {
 
-            spawnLog(720, 170, 'log', 'right', 30);    
-            nextSpawnTime[6] = game.time.now + 5500 + spawnRate(1000);
+            spawnLog(720, 170, 'log', 'right', 60);    
+            nextSpawnTime[6] = game.time.now + 4500 + spawnRate(1000);
         
         }
         
         if(game.time.now > nextSpawnTime[7]) {
 
-            spawnLog(-15, 137, 'log', 'left', 30);    
-            nextSpawnTime[7] = game.time.now + 5500 + spawnRate(1000);
+            spawnLog(-100, 137, 'log', 'left', 50);    
+            nextSpawnTime[7] = game.time.now + 6500 + spawnRate(2000);
         
         }
         
         if(game.time.now > nextSpawnTime[8]) {
 
             spawnLog(720, 104, 'log', 'right', 30);    
-            nextSpawnTime[8] = game.time.now + 5500 + spawnRate(1000);
+            nextSpawnTime[8] = game.time.now + 8500 + spawnRate(1500);
         
         }
         
         if(game.time.now > nextSpawnTime[9]) {
 
-            spawnLog(-15, 71, 'log', 'left', 30);    
-            nextSpawnTime[9] = game.time.now + 5500 + spawnRate(1000);
+            spawnLog(-100, 71, 'log', 'left', 70);    
+            nextSpawnTime[9] = game.time.now + 4500 + spawnRate(500);
         
         }
         
         if(game.time.now > nextSpawnTime[10]) {
 
-            spawnLog(720, 38, 'log', 'right', 30);    
-            nextSpawnTime[10] = game.time.now + 5500 + spawnRate(1000);
+            spawnLog(720, 38, 'log', 'right', 40);    
+            nextSpawnTime[10] = game.time.now + 6500 + spawnRate(1500);
         
         }
         
