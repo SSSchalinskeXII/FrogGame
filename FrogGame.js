@@ -3,6 +3,7 @@ window.onload = function() {
 }
 
 function bootStrap() {
+    var nickCageMode = false;
     var globalGameState;
     var countdownTimer;
     var countdownTimerDuration;
@@ -109,6 +110,8 @@ function bootStrap() {
         player.anchor.setTo(0.5, 0.5);
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
+        player.body.onCollide = new Phaser.Signal();
+        player.body.onCollide.add(frogPhysicsCollide, this);
         player.body.setSize(10, 10, 10, 10);
                 
         barrier = game.add.sprite(0,429, 'barrier');
@@ -210,6 +213,7 @@ function bootStrap() {
         
         obstacleGroup.enableBody = true;
         obstacleGroup.physics = Phaser.Physics.ARCADE;
+        //obstacleGroup.body.immovable = true;
         
         logGroup.enableBody = true;
         logGroup.physics = Phaser.Physics.ARCADE;
@@ -281,6 +285,14 @@ function bootStrap() {
         //dynamicPrompt();
         txt_DynamicPrompt.text = txt_DynamicPromptMessage;
         txt_DynamicPrompt.bringToTop();
+                //game.debug.bodyInfo(player, 32, 32);
+        //game.debug.body(player);
+
+        //for (var i = 0; i < obstacleGroup.countLiving(); i++) {
+  
+            //game.debug.body(obstacleGroup.children[i]);
+            
+        //}
 
     }
 
@@ -423,6 +435,16 @@ function bootStrap() {
         var obstacle = obstacleGroup.create(x, y, sprite);
         game.physics.arcade.enable(obstacle);
         obstacle.z = 6;
+
+
+
+        if (nickCageMode === true) {
+            obstacle.body.immovable = false;
+        } else {
+            obstacle.body.immovable = true;
+        }
+
+        
         
         obstacleMovement(obstacle, direction, speed);
         
@@ -439,10 +461,11 @@ function bootStrap() {
     }
     
     
-    function frogDeath(frog) {
+    function frogDeath(frog, frogKiller) {
         
         countdownTimer.removeAll();
         console.log("frogdeath called at: " + game.time.now);
+        //console.log("frog killer was a: " + frogKiller.key);
         deathTime = game.time.now;
         playerAlive = false;
         subtractLife();
@@ -544,17 +567,46 @@ function bootStrap() {
         
     }
 
+    function frogPhysicsCollide(player, thingThatCollidedWithPlayer) {
+
+        console.log("frogphysicscollide! " + thingThatCollidedWithPlayer);
+        console.log("The Frog has Collided with a " + thingThatCollidedWithPlayer.key);
+
+        if (thingThatCollidedWithPlayer.key != "goal") {
+
+        if (nickCageMode === false) {    
+            frogDeath(player);
+        }
+
+        }
+
+    }
+
     function frogCollisionDetection() {
 
         //Revamped Collision detection
         
         for (var i = 0; i < obstacleGroup.countLiving(); i++) {
+
+
+            if (nickCageMode === true) {
+
+
+            }
+
+            //obstacleGroup.children[i].immovable = true;
+
+
+            //game.physics.arcade.collide(player, obstacleGroup.children[i], frogDeath, this); 
             
-            if (checkOverlap(player, obstacleGroup.children[i])){
-                
-                frogDeath(player);
-                
-            }    
+            //if (checkOverlap(player, obstacleGroup.children[i])){
+            //    
+            //    //frogDeath(player);
+            //console.log("line 556 in play: " + player.position.x + " , " + player.position.y);
+            //console.log(obstacleGroup.children[i].key);
+            //console.log(obstacleGroup.children[i].position);
+            //    
+            //}    
             
         }
         
@@ -562,6 +614,14 @@ function bootStrap() {
         if (checkOverlap(player, barrier)){
             player.y = player.y - 33;
         }
+
+
+
+
+
+
+
+        game.physics.arcade.collide(player, obstacleGroup); 
 
         game.physics.arcade.collide(player, goal1, reachedGoal, null, this); 
         game.physics.arcade.collide(player, goal2, reachedGoal, null, this); 
@@ -595,7 +655,7 @@ function bootStrap() {
             
             if (checkOverlap(player, logGroup.children[l])){
                 
-                console.log('onLog');
+                //console.log('onLog');
                 onLog = true;
                 
                 if (canMove) {
@@ -612,6 +672,7 @@ function bootStrap() {
                 
                 deathNote = game.time.now + 150;
                 order66 = true;
+                //console.log("order66 set to true: " + player.position.y);
                 
             }
             
@@ -621,6 +682,7 @@ function bootStrap() {
                 
             deathNote = 0;
             frogDeath(player);
+            //console.log("line 625 in play: " + player.position.y);
             order66 = false;
             
         }
@@ -852,7 +914,7 @@ function bootStrap() {
             console.log(timeleft_seconds.toFixed(0) + " when saved");
             changeCurrentScore('add', timeleft_seconds.toFixed(0) * 50);
 
-            player.reset(350,428);
+            player.reset(350,410);
             goalObject.alpha = 1.0;
             goalObject.takenCareOf = true;
             DynamicPromptTimeOfInitialDisplay = game.time.now;
@@ -867,7 +929,7 @@ function bootStrap() {
             changeCurrentScore('subtract',100);
             DynamicPromptTimeOfInitialDisplay = game.time.now;
             txt_DynamicPromptMessage = "Your Frog is\nin Another Castle";
-            player.reset(350,428);
+            player.reset(350,410);
         }
 
     }
@@ -884,5 +946,7 @@ function bootStrap() {
     }
 
 };
+
+
 
 
