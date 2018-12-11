@@ -1,11 +1,14 @@
 body, html{
     
     height: 100%;
+    overflow: hidden;
+    margin: 0;
     
 }
 
 #background{
     
+    background-image: url(FrogGame_Background.jpeg);
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -18,8 +21,9 @@ body, html{
 	width: 1093px;
 	height: 631px;
     position: absolute;
-    left: 150px;
-    top: 95px;
+    left: 50%;
+    top: 50%;
+    margin: -300px -550px 0 -550px
 }
 
 #logo{
