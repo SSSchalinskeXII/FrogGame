@@ -133,35 +133,35 @@ function bootStrap() {
             
         goal1 = game.add.sprite(58,0, 'goal');
         goal1.scale.setTo(.9, .9);
-        goal1.alpha = 0;
+        goal1.alpha = 1;
         goal1.takenCareOf = false;
         game.physics.arcade.enable(goal1);
         goal1.body.immovable = true;
 
-        goal2 = game.add.sprite(201,0, 'goal');
+        goal2 = game.add.sprite(203,0, 'goal');
         goal2.scale.setTo(.9, .9);
-        goal2.alpha = 0;
+        goal2.alpha = 1;
         goal2.takenCareOf = false;
         game.physics.arcade.enable(goal2);
         goal2.body.immovable = true;
 
         goal3 = game.add.sprite(346,0, 'goal');
         goal3.scale.setTo(.9, .9);
-        goal3.alpha = 0;
+        goal3.alpha = 1;
         goal3.takenCareOf = false;
         game.physics.arcade.enable(goal3);
         goal3.body.immovable = true;
 
         goal4 = game.add.sprite(489,0, 'goal');
         goal4.scale.setTo(.9, .9);
-        goal4.alpha = 0;
+        goal4.alpha = 1;
         goal4.takenCareOf = false;
         game.physics.arcade.enable(goal4);
         goal4.body.immovable = true;
 
         goal5 = game.add.sprite(633,0, 'goal');
         goal5.scale.setTo(.9, .9);
-        goal5.alpha = 0;
+        goal5.alpha = 1;
         goal5.takenCareOf = false;
         game.physics.arcade.enable(goal5);
         goal5.body.immovable = true;
