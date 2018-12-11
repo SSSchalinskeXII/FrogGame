@@ -1,52 +1,56 @@
-body { 
- 
-	background-image: url(FrogGame_Background.jpeg); 
-    text-align: center; 
- 
-} 
-#thewholething{ 
-	background-color: rgb(54,54,54); 
-	width: 1093px; 
-	height: 631px; 
-    position: absolute; 
-    left: 150px; 
-    top: 95px; 
-} 
- 
-#logo{ 
-	background-color: black; 
-	background-image: url('justlogo.png'); 
-	width: 965px; 
-	height: 82px; 
-	position: relative; 
-	left:65px; 
-	top: 8px; 
-} 
- 
-#instructions{ 
-	background-color: black; 
-	background-image: url('justinstructions.png'); 
-	width: 205px; 
-	height: 468px; 
-	position: relative; 
-	left:849px; 
-	top: 40px; 
-} 
- 
-#game{ 
-	position: relative; 
-	height: 461px; 
-	width: 709px; 
-	bottom: 429px; 
-	left: 75px; 
-	opacity: 0.20; 
-} 
- 
-#wipsign { 
-	position: relative; 
-	background-image: url('wip_sign.png'); 
-	width: 453px; 
-	height: 111px; 
-	top: -996px; 
-	left: 654px; 
+body, html{
+    
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    
+}
+
+#background{
+    
+    background-image: url(FrogGame_Background.jpeg);
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+
+#thewholething{
+	
+	width: 1093px;
+	height: 631px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -300px -550px 0 -550px
+}
+
+#logo{
+	background-color: black;
+	background-image: url('justlogo.png');
+	width: 965px;
+	height: 82px;
+	position: relative;
+	left:65px;
+	top: 8px;
+}
+
+#instructions{
+	background-color: black;
+	background-image: url('justinstructions.png');
+	width: 205px;
+	height: 468px;
+	position: relative;
+	left:824px;
+	top: 40px;
+}
+
+#game{
+	position: relative;
+	height: 461px;
+	width: 709px;
+	bottom: 429px;
+	left: 75px;
+	opacity: 0.20;
 }
