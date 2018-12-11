@@ -2,7 +2,7 @@ body, html{
     
     height: 100%;
     overflow: hidden;
-    background-color: black;
+    margin: 0;
     
 }
 
@@ -16,20 +16,14 @@ body, html{
     
 }
 
-#wrapper{
-    
-    text-align: center;
-    
-}
-
 #thewholething{
 	
-    display: inline-block;
 	width: 1093px;
 	height: 631px;
     position: absolute;
-    left: 150px;
-    top: 95px;
+    left: 50%;
+    top: 50%;
+    margin: -300px 0 0 -500px
 }
 
 #logo{
