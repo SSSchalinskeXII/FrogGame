@@ -138,7 +138,7 @@ function bootStrap() {
         game.physics.arcade.enable(goal1);
         goal1.body.immovable = true;
 
-        goal2 = game.add.sprite(201,0, 'goal');
+        goal2 = game.add.sprite(203,0, 'goal');
         goal2.scale.setTo(.9, .9);
         goal2.alpha = 0;
         goal2.takenCareOf = false;
@@ -167,48 +167,60 @@ function bootStrap() {
         goal5.body.immovable = true;
 
         // Time Left Text Elements
-        txt_TimeLeft = game.add.text(300, 427, "Time:");
+        txt_TimeLeft = game.add.text(300, 417, "Time:");
         txt_TimeLeft.fill = "#FFFFFF";
         txt_TimeLeft.anchor.set(0,0);
         txt_TimeLeft.font ='monospace';
         txt_TimeLeft.fontSize ='33px';
+        txt_TimeLeft.stroke = '#000000';
+        txt_TimeLeft.strokeThickness = 10;
 
         timeleft_seconds = 15;
-        txt_SecondsLeft = game.add.text(410, 427, timeleft_seconds);
+        txt_SecondsLeft = game.add.text(410, 417, timeleft_seconds);
         txt_SecondsLeft.fill = "#FF0000";
         txt_SecondsLeft.anchor.set(0,0);
         txt_SecondsLeft.font ='monospace';
         txt_SecondsLeft.fontSize ='33px';
+        txt_SecondsLeft.stroke = '#000000';
+        txt_SecondsLeft.strokeThickness = 10;
         
         // Score Text Elements
-        txt_ScoreLabel = game.add.text(5, 427, "Score:");
+        txt_ScoreLabel = game.add.text(5, 417, "Score:");
         txt_ScoreLabel.fill = "#FFFFFF";
         txt_ScoreLabel.anchor.set(0,0);
         txt_ScoreLabel.font ='monospace';
         txt_ScoreLabel.fontSize ='33px';
+        txt_ScoreLabel.stroke = '#000000';
+        txt_ScoreLabel.strokeThickness = 10;
 
         setCurrentScore(0);
         // changeCurrentScore('add',500); // - For Testing
-        txt_CurrentScoreDisplay = game.add.text(130, 427, txt_CurrentScoreValue);
+        txt_CurrentScoreDisplay = game.add.text(130, 417, txt_CurrentScoreValue);
         txt_CurrentScoreDisplay.fill = "#FF0000";
         txt_CurrentScoreDisplay.anchor.set(0,0);
         txt_CurrentScoreDisplay.font ='monospace';
         txt_CurrentScoreDisplay.fontSize ='33px';
+        txt_CurrentScoreDisplay.stroke = '#000000';
+        txt_CurrentScoreDisplay.strokeThickness = 10;
 
         // Lives Text Elements
-        txt_LivesLeftLabel = game.add.text(561, 427, "Lives:");
+        txt_LivesLeftLabel = game.add.text(561, 417, "Lives:");
         txt_LivesLeftLabel.fill = "#FFFFFF";
         txt_LivesLeftLabel.anchor.set(0,0);
         txt_LivesLeftLabel.font ='monospace';
         txt_LivesLeftLabel.fontSize ='33px';
+        txt_LivesLeftLabel.stroke = '#000000';
+        txt_LivesLeftLabel.strokeThickness = 10;
 
         setNumberOfLives(5);
         //changeNumberOfLives("add", 1);  // This is just a testing line
-        txt_CurrentLivesLeftDisplay = game.add.text(680, 427, txt_CurrentLivesLeftValue);
+        txt_CurrentLivesLeftDisplay = game.add.text(680, 417, txt_CurrentLivesLeftValue);
         txt_CurrentLivesLeftDisplay.fill = "#FF0000";
         txt_CurrentLivesLeftDisplay.anchor.set(0,0);
         txt_CurrentLivesLeftDisplay.font ='monospace';
         txt_CurrentLivesLeftDisplay.fontSize ='33px';
+        txt_CurrentLivesLeftDisplay.stroke = '#000000';
+        txt_CurrentLivesLeftDisplay.strokeThickness = 10;
 
 
         // Dynamic Text Prompt
