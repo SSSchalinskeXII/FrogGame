@@ -502,7 +502,8 @@ function bootStrap() {
             goal5.alpha = 0;
             goal5.takenCareOf = false;
             frogsSaved = 0;
-            console.log('department of the interior:' + globalGameState);
+            //console.log('department of the interior:' + globalGameState);
+            setCurrentScore(0);
             respawnPlayer();
             //globalGameState = "gameplay";                    
         } else {
